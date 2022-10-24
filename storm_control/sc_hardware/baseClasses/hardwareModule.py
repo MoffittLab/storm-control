@@ -138,7 +138,7 @@ class BufferedFunctionality(HardwareFunctionality):
         e_string = "HardwareFunctionality timed out!"
         raise halExceptions.HardwareException(e_string)
 
-    def maybeRun(self, task = None, args = [], ret_signal = None):
+    def maybeRun(self, task = None, args = [], ret_signal = None, run_next = True):
         """
         Call this method with requests that don't absolutely have to be
         processed. This will process them in the order received, but 
@@ -147,7 +147,7 @@ class BufferedFunctionality(HardwareFunctionality):
         if not self.busy:
             self.busy = True
             self.start(task, args, ret_signal)
-        else:
+        elif run_next:
             self.next_request = [task, args, ret_signal]
 
     def mustRun(self, task = None, args = [], ret_signal = None):

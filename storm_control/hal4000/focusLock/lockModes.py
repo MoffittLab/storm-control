@@ -952,7 +952,7 @@ class CalibrationLockMode(JumpLockMode):
 class HardwareZScanLockMode(AlwaysOnLockMode):
     """
     This holds a focus target. Then during filming it does a hardware
-    times z scan.
+    timed z scan using the DAQ.
     """
     def __init__(self, parameters = None, **kwds):
         kwds["parameters"] = parameters    
@@ -980,7 +980,8 @@ class HardwareZScanLockMode(AlwaysOnLockMode):
         """
         if self.amLocked() and isinstance(self.hzs_zvals, numpy.ndarray):
             waveform = self.hzs_zvals + LockMode.z_stage_functionality.getCurrentPosition()
-            return LockMode.z_stage_functionality.getDaqWaveform(waveform)
+            return {"type": "daqWaveform", 
+                    "waveform": LockMode.z_stage_functionality.getDaqWaveform(waveform)}
 
     def setZStageFunctionality(self, z_stage_functionality):
         super().setZStageFunctionality(z_stage_functionality)
@@ -1008,6 +1009,47 @@ class HardwareZScanLockMode(AlwaysOnLockMode):
             self.hzs_film_off = False
             self.behavior = "locked"
 
+class SoftwareConfigHardwareTrigZScanLockMode(AlwaysOnLockMode):
+    """
+    This holds a focus target. Then during filming it executes a hardware 
+    triggered z scan
+    """
+    def __init__(self, parameters = None, **kwds):
+        kwds["parameters"] = parameters    
+        super().__init__(**kwds)
+        self.hzs_film_off = False
+        self.name = "Triggered Z Scan"
+        
+#    def getWaveform(self):
+#        """
+#        This is called before startFilm() by lockControl.LockControl. It
+#        returns the waveform to use during filming as a daqModule.DaqWaveform,
+#        or None if there is no waveform or one shouldn't be used.
+#        """
+#        return {"type": "software_config_hardware_trigger", 
+#                "isLocked": self.amLocked()}
+
+    def amLocked(self): 
+        # Over write this method, so that the focus lock is marked as on if it is either 
+        # in the lock behavior or it was in the lock behavior prior to starting a film
+        return (self.behavior == "locked") or self.hzs_film_off
+
+    def setZStageFunctionality(self, z_stage_functionality):
+        if not LockMode.z_stage_functionality.haveHardwareTiming():
+            raise LockModeException("Z stage does not support hardware timed scans.")
+
+    def shouldEnableLockButton(self):
+        return True
+    
+    def startFilm(self):
+        if self.amLocked():
+            self.behavior = "none"
+            self.hzs_film_off = True
+
+    def stopFilm(self):
+        if self.hzs_film_off:
+            self.hzs_film_off = False
+            self.behavior = "locked"
 
 class DiagnosticsLockMode(NoLockMode):
     """

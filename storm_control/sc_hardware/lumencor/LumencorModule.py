@@ -9,6 +9,7 @@ import storm_control.hal4000.halLib.halMessage as halMessage
 
 import storm_control.sc_hardware.baseClasses.amplitudeModule as amplitudeModule
 import storm_control.sc_hardware.baseClasses.hardwareModule as hardwareModule
+import storm_control.sc_hardware.lumencor.celesta as celesta
 
 
 class LumencorLaserFunctionality(amplitudeModule.AmplitudeFunctionalityBuffered):
@@ -90,7 +91,6 @@ class Celesta(LumencorModule):
         ip = module_params.get("configuration").get("ip",'192.168.201.200')
         laser_id = module_params.get("configuration").get("laser_id",0)
 
-        import storm_control.sc_hardware.lumencor.celesta as celesta
         self.laser = celesta.LumencorLaser(ip = ip,laser_id=laser_id)
 
         if self.laser.getStatus():

@@ -22,6 +22,7 @@ class RS232(object):
                  port = None,
                  timeout = 1.0e-3,
                  wait_time = 1.0e-2,
+                 debug = False,
                  **kwds):
         """
         port - The port for RS-232 communication, e.g. "COM4".
@@ -36,6 +37,7 @@ class RS232(object):
         self.end_of_line = end_of_line
         self.live = True
         self.wait_time = wait_time
+        self.debug = debug
         try:
             self.tty = serial.Serial(port, baudrate, timeout = timeout)
             self.tty.flush()
@@ -57,6 +59,8 @@ class RS232(object):
             time.sleep(self.wait_time)
             response_len = self.tty.inWaiting()
         if len(response) > 0:
+            if self.debug:
+                print("Response: " + response)
             return response
 
     def getResponse(self):
@@ -70,6 +74,8 @@ class RS232(object):
             time.sleep(self.wait_time)
             response_len = self.tty.inWaiting()
         if len(response) > 0:
+            if self.debug:
+                print("Response: " + response)
             return response
 
     def getStatus(self):
@@ -89,6 +95,8 @@ class RS232(object):
     def sendCommand(self, command):
         self.tty.flush()
         self.write(command + self.end_of_line)
+        if self.debug:
+            print("Wrote: " + command)
 
     def shutDown(self):
         """

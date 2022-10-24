@@ -234,6 +234,12 @@ class FocusLock(halModule.HalModule):
                               validator = {"data" : {"delta" : [True, float]},
                                            "resp" : None})
         
+        # This message can be used by modules that need to coordinate their behavior based on focus lock status
+        halMessage.addMessage("focus lock status",
+                              validator = {"data" : None,
+                                           "resp" : {"mode_name" : [True, str],
+                                                     "is_locked": [True, bool]}})
+        
     def cleanUp(self, qt_settings):
         self.view.cleanUp(qt_settings)
 
@@ -340,4 +346,17 @@ class FocusLock(halModule.HalModule):
             if handled:
                 message.addResponse(halMessage.HalMessageResponse(source = self.module_name,
                                                                   data = {"handled" : True}))
+        
+        elif message.isType("focus lock status"):
+            # Handle the case of a defined lock mode
+            if self.control.lock_mode is not None:
+                message.addResponse(halMessage.HalMessageResponse(source = self.module_name,
+                                                                  data = {"mode_name": self.control.getLockModeName(),
+                                                                          "is_locked": self.control.getLockStatus()}))
+            else: # Handle the case of no defined lock mode
+                print("SENDING Focus lock status")
+                message.addResponse(halMessage.HalMessageResponse(source = self.module_name,
+                                                                  data = {"mode_name": "None",
+                                                                          "is_locked": False}))
+
 

@@ -38,6 +38,10 @@ class LockControl(QtCore.QObject):
     def getLockModeName(self):
         return self.lock_mode.getName()
     
+    def getLockStatus(self):
+        print("Requesting lock status")
+        return self.lock_mode.amLocked()
+    
     def getLockTarget(self):
         return self.lock_mode.getLockTarget()
 
@@ -331,11 +335,17 @@ class LockControl(QtCore.QObject):
                 self.offset_fp.write(" ".join(headers) + "\n")
 
             # Check for a waveform from a hardware timed lock mode that uses the DAQ.
-            waveform = self.lock_mode.getWaveform()
-            if waveform is not None:
-                self.controlMessage.emit(halMessage.HalMessage(m_type = "daq waveforms",
-                                                               data = {"waveforms" : [waveform]}))
-                
+            waveform_dict = self.lock_mode.getWaveform()
+            if waveform_dict is not None:
+                if waveform_dict["type"] == "daqWaveform":
+                    waveform = waveform_dict["waveform"]
+                    if waveform is not None:
+                        self.controlMessage.emit(halMessage.HalMessage(m_type = "daq waveforms",
+                                                                       data = {"waveforms" : [waveform]}))
+                elif waveform_dict["type"] == "software_config_hardware_trigger":
+                    self.controlMessage.emit(halMessage.HalMessage(m_type = "software config z scan",
+                                                                   data = {"is_locked" : waveform_dict["is_locked"]}))
+     
             self.lock_mode.startFilm()
         
     def startLock(self, lock_target = None):

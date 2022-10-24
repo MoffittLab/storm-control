@@ -13,7 +13,6 @@ import storm_control.sc_hardware.baseClasses.hardwareModule as hardwareModule
 import storm_control.sc_hardware.baseClasses.lockModule as lockModule
 import storm_control.sc_hardware.pointGrey.pointGreyLockCamera as pointGreyLockCamera
 
-
 class PGQPDAutoFocusFunctionality(hardwareModule.HardwareFunctionality, lockModule.QPDAutoFocusFunctionalityMixin):
     qpdUpdate = QtCore.pyqtSignal(dict)
 
@@ -56,6 +55,48 @@ class PGQPDAutoFocusFunctionality(hardwareModule.HardwareFunctionality, lockModu
     def wait(self):
         self.camera.stopCamera()
             
+class PGQPDAxiconCameraFocusFunctionality(hardwareModule.HardwareFunctionality, lockModule.QPDAxiconCameraFunctionalityMixin):
+    qpdUpdate = QtCore.pyqtSignal(dict)
+
+    def __init__(self, camera = None, **kwds):
+        super().__init__(**kwds)
+        self.camera = camera
+        self.camera.cameraUpdate.connect(self.handleCameraUpdate)
+        self.started = False
+
+    def adjustAOI(self, dx, dy):
+        print("No AOI adjustement is possible")
+        #self.camera.adjustAOI(dx, dy)
+        
+    def adjustZeroDist(self, inc):
+        self.camera.adjustZeroDist(inc)
+
+    def handleCameraUpdate(self, qpd_dict):
+        #
+        # We are bouncing the signal here so that we can adjust the offset value. Like
+        # with the Thorlabs cameras this may also improve the update speed, but this
+        # was not tested.
+        #
+        qpd_dict["offset"] = qpd_dict["offset"] * self.units_to_microns
+        self.qpdUpdate.emit(qpd_dict)
+
+    def getMinimumInc(self):
+        #
+        # The minimum step size of AOI adjustments for these cameras is 8 pixels.
+        #
+        return 8
+        
+    def getOffset(self):
+        #
+        # lockControl.LockControl will call this each time the qpdUpdate signal
+        # is emitted, but we only want to start the camera once.
+        #
+        if not self.started:
+            self.camera.startCamera()
+            self.started = True
+            
+    def wait(self):
+        self.camera.stopCamera()
 
 class PointGreyLockCamera(hardwareModule.HardwareModule):
     """
@@ -79,11 +120,28 @@ class PointGreyLockCamera(hardwareModule.HardwareModule):
                                                            parameters = configuration.get("camera_parameters"))
         elif (configuration.get("single_spot", False)):
             self.camera = pointGreyLockCamera.SSLockCamera(camera_id = configuration.get("camera_id"),
-                                                           parameters = configuration.get("camera_parameters"))            
+                                                           parameters = configuration.get("camera_parameters"))
+        elif (configuration.get("axicon", False)):
+            self.camera = pointGreyLockCamera.AxiconLockCamera(camera_id = configuration.get("camera_id"),
+                                                           parameters = configuration.get("camera_parameters"))
+        else:
+            assert False, "No camera lock type was provided"
 
-        self.camera_functionality = PGQPDAutoFocusFunctionality(camera = self.camera,
-                                                                parameters = configuration.get("parameters"),
-                                                                units_to_microns = configuration.get("units_to_microns"))
+
+        # Confirm that a proper configuration was given and a camera was created
+        if self.camera is None:
+            print(">>The PointGrey autofocus camera was not properly configured")
+        assert(self.camera is not None)
+
+        if not (configuration.get("axicon", False)):
+            self.camera_functionality = PGQPDAutoFocusFunctionality(camera = self.camera,
+                                                                    parameters = configuration.get("parameters"),
+                                                                    units_to_microns = configuration.get("units_to_microns"))
+        else:
+            self.camera_functionality = PGQPDAxiconCameraFocusFunctionality(camera = self.camera,
+                                                        parameters = configuration.get("parameters"),
+                                                        units_to_microns = configuration.get("units_to_microns"))
+
 
     def cleanUp(self, qt_settings):
         self.camera_functionality.wait()

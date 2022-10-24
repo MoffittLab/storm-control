@@ -24,7 +24,8 @@ class ZStageView(halDialog.HalDialog):
     def __init__(self, configuration = None, **kwds):
         super().__init__(**kwds)
         self.parameters = params.StormXMLObject()
-        self.retracted_z = configuration.get("retracted_z")
+        self.retracted_z = configuration.get("retracted_z", None)
+        self.can_zero = configuration.get("can_zero", True) # Default is to allow rezero to maintain backwards compatibility
         self.z_stage_fn = None
 
         # Load UI
@@ -47,6 +48,12 @@ class ZStageView(halDialog.HalDialog):
 
         self.ui.goButton.clicked.connect(self.handleGoButton)
         
+		# Handle functionalities that are not implemented
+        if self.retracted_z is None:
+            self.ui.retractButton.setEnabled(False)
+        if self.can_zero is False:
+            self.ui.zeroButton.setEnabled(False)
+		
         # Set to minimum size & fix.
         self.adjustSize()
         self.setFixedSize(self.width(), self.height())
@@ -107,8 +114,8 @@ class ZStageView(halDialog.HalDialog):
         self.z_stage_fn.zStagePosition.connect(self.handleZStagePosition)
         self.ui.goSpinBox.setMinimum(self.z_stage_fn.getMinimum())
         self.ui.goSpinBox.setMaximum(self.z_stage_fn.getMaximum())
+        self.handleZStagePosition(self.z_stage_fn.getPosition())
         self.setEnabled(True)
-
 
 class ZStage(halModule.HalModule):
 
@@ -129,7 +136,6 @@ class ZStage(halModule.HalModule):
             self.view.setFunctionality(response.getData()["functionality"])
 
     def processMessage(self, message):
-
         if message.isType("configure1"):
             self.sendMessage(halMessage.HalMessage(m_type = "add to menu",
                                                    data = {"item name" : "Z Stage",
@@ -140,8 +146,8 @@ class ZStage(halModule.HalModule):
 
             self.sendMessage(halMessage.HalMessage(m_type = "initial parameters",
                                                    data = {"parameters" : self.view.getParameters()}))            
-
         elif message.isType("new parameters"):
+
             p = message.getData()["parameters"]
             message.addResponse(halMessage.HalMessageResponse(source = self.module_name,
                                                               data = {"old parameters" : self.view.getParameters().copy()}))
@@ -156,5 +162,6 @@ class ZStage(halModule.HalModule):
         elif message.isType("start"):
             if message.getData()["show_gui"]:
                 self.view.showIfVisible()
+                
 
 

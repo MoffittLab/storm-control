@@ -94,14 +94,19 @@ class LockDisplay(QtWidgets.QGroupBox):
         if (name == "ir_laser"):
             self.ir_laser_functionality = functionality
             
-            self.ui.irButton.show()
-            self.ui.irButton.clicked.connect(self.handleIrButton)
-            if self.ir_laser_functionality.hasPowerAdjustment():
-                self.ui.irSlider.setMaximum(self.ir_laser_functionality.getMaximum())
-                self.ui.irSlider.setMinimum(self.ir_laser_functionality.getMinimum())
-                self.ui.irSlider.setValue(self.ir_power)
-                self.ui.irSlider.show()
-                self.ui.irSlider.valueChanged.connect(self.handleIrSlider)
+            if self.ir_laser_functionality.shouldDisplay():
+                self.ui.irButton.show()
+                self.ui.irButton.clicked.connect(self.handleIrButton)
+                if self.ir_laser_functionality.hasPowerAdjustment():
+                    self.ui.irSlider.setMaximum(self.ir_laser_functionality.getMaximum())
+                    self.ui.irSlider.setMinimum(self.ir_laser_functionality.getMinimum())
+                    self.ui.irSlider.setValue(self.ir_power)
+                    self.ui.irSlider.show()
+                    self.ui.irSlider.valueChanged.connect(self.handleIrSlider)
+            else:
+                self.ui.irButton.hide()
+                self.ui.irSlider.hide()
+
         elif (name == "qpd"):
             self.q_qpd_offset_display.setFunctionality(functionality)
             self.q_qpd_sum_display.setFunctionality(functionality)
@@ -129,6 +134,13 @@ class LockDisplay(QtWidgets.QGroupBox):
             # Display QPD camera output.
             elif (functionality.getType() == "qpd_camera"):
                 self.q_qpd_display = QQPDCamDisplay(parent = self)
+                layout = QtWidgets.QGridLayout(self.ui.qpdFrame)
+                layout.setContentsMargins(0,0,0,0)
+                layout.addWidget(self.q_qpd_display)
+                self.q_qpd_display.setFunctionality(functionality)
+                
+            elif (functionality.getType() == "qpd_axicon_camera"):
+                self.q_qpd_display = QQPDAxiconCamDisplay(parent = self)
                 layout = QtWidgets.QGridLayout(self.ui.qpdFrame)
                 layout.setContentsMargins(0,0,0,0)
                 layout.addWidget(self.q_qpd_display)
@@ -216,7 +228,9 @@ class QAFCamDisplay(QCamDisplay):
         # Update the camera image. The image should be an numpy.uint8 array.
         np_data = qpd_data["image"]
         h, w = np_data.shape
-        self.camera_image = QtGui.QImage(np_data.data, w, h, QtGui.QImage.Format_Indexed8)
+        #self.camera_image = QtGui.QImage(np_data.data, w, h, QtGui.QImage.Format_Indexed8)
+        self.camera_image = QtGui.QImage(np_data.data, h, w, QtGui.QImage.Format_Indexed8)
+        
         self.camera_image.ndarray = np_data
         for i in range(256):
             self.camera_image.setColor(i, QtGui.QColor(i,i,i).rgb())
@@ -312,6 +326,7 @@ class QQPDCamDisplay(QCamDisplay):
         self.camera_image = None
         self.draw_e1 = True
         self.draw_e2 = True
+        self.draw_rois = False # Updated feature to draw ROI for fitting
         self.e_size = 8
         self.fit_mode = True
         self.foreground = QtGui.QColor(0,255,0)
@@ -331,7 +346,7 @@ class QQPDCamDisplay(QCamDisplay):
         self.y_off2 = 0
 
         self.setToolTip(self.tooltips[0])
-
+        
     def handleQPDUpdate(self, qpd_data):
         """
         Updates the image that will be shown in the widget given a new image 
@@ -341,23 +356,29 @@ class QQPDCamDisplay(QCamDisplay):
         # Update the camera image.
         np_data = qpd_data["image"]
         h, w = np_data.shape
-        self.camera_image = QtGui.QImage(np_data.data, w, h, QtGui.QImage.Format_Indexed8)
+        #self.camera_image = QtGui.QImage(np_data.data, w, h, QtGui.QImage.Format_Indexed8)  ### CHECK ON THIS CHANGE
+        self.camera_image = QtGui.QImage(np_data.data, h, w, QtGui.QImage.Format_Indexed8)
+        
         self.camera_image.ndarray = np_data
         for i in range(256):
             self.camera_image.setColor(i, QtGui.QColor(i,i,i).rgb())
 
         # Update display image. This is a square version of the camera image.
-        self.display_pixmap = QtGui.QPixmap(w, w)
+        #self.display_pixmap = QtGui.QPixmap(w, w)
+        self.display_pixmap = QtGui.QPixmap(w,w)
         painter = QtGui.QPainter(self.display_pixmap)
 
         # Draw background.
         painter.setPen(QtGui.QColor(0,0,0))
         painter.setBrush(QtGui.QColor(0,0,0))
-        painter.drawRect(0, 0, w, w)
+        #painter.drawRect(0, 0, w, w)
+        painter.drawRect(0, 0, w, h)
 
         # Draw image.
-        y_start = self.display_pixmap.height()/2 - self.camera_image.height()/2
-        destination_rect = QtCore.QRect(0, y_start, self.camera_image.width(), self.camera_image.height())
+        #y_start = self.display_pixmap.height()/2 - self.camera_image.height()/2
+        #destination_rect = QtCore.QRect(0, y_start, self.camera_image.width(), self.camera_image.height())
+        destination_rect = QtCore.QRect(0, 0, self.camera_image.width(), self.camera_image.height())
+
         painter.drawImage(destination_rect, self.camera_image)
 
         # Draw bounding rectangle.
@@ -392,6 +413,10 @@ class QQPDCamDisplay(QCamDisplay):
             self.draw_e2 = True
             self.x_off2 = ((qpd_data["y_off2"]+w/2)/float(w))*float(self.width())
             self.y_off2 = ((qpd_data["x_off2"]+w/2)/float(w))*float(self.height())
+
+        if ("rois" in qpd_data):
+            self.draw_rois = True
+            self.rois = qpd_data["rois"]
 
         # Red dot in camera display
         self.show_dot = not self.show_dot
@@ -500,13 +525,216 @@ class QQPDCamDisplay(QCamDisplay):
             if self.show_dot:
                 painter.setPen(QtGui.QColor(255,0,0))
                 painter.drawRect(2,2,2,2)
-
+                
+            # display rois
+            if self.draw_rois:
+                for roi in self.rois:
+                    painter.setPen(QtGui.QColor(255,0,0))
+                    painter.drawRect(roi[0], roi[2], roi[1]-roi[0], roi[3]-roi[2])
+                    
         else:
             painter.setPen(self.background)
             painter.setBrush(self.background)
             painter.drawRect(0, 0, self.width(), self.height())
 
+class QQPDAxiconCamDisplay(QCamDisplay):
+    """
+    (QPD) USB camera image display for a camera that is emulating a QPD.
+    """
+    def __init__(self, **kwds):
+        super().__init__(**kwds)
         
+        self.background = QtGui.QColor(0,0,0)
+        self.camera_image = None
+        self.draw_e1 = True
+        self.draw_e2 = True
+        self.draw_rois = True
+        self.e_size = 8
+        self.foreground = QtGui.QColor(0,255,0)
+        self.show_dot = False
+        self.tooltips = ["click to adjust", "<,.> keys to change zero point"]
+        self.zoom_image = False
+        self.zoom_size = 40
+        self.zoom_im_x = -1
+        self.zoom_im_y = -1
+        self.zoom_x = 0
+        self.zoom_y = 0
+
+        self.x_off1 = 0
+        self.y_off1 = 0
+        self.x_off2 = 0
+        self.y_off2 = 0
+        self.rois = None
+
+        self.setToolTip(self.tooltips[0])
+        
+    def handleQPDUpdate(self, qpd_data):
+        """
+        Updates the image that will be shown in the widget given a new image 
+        from the focus lock camera, as well as the fit spot locations.
+        """
+        
+        # Update the camera image.
+        np_data = qpd_data["image"]
+        h, w = np_data.shape
+        self.camera_image = QtGui.QImage(np_data.data, w, h, QtGui.QImage.Format_Indexed8)
+        
+        self.camera_image.ndarray = np_data
+        for i in range(256):
+            self.camera_image.setColor(i, QtGui.QColor(i,i,i).rgb())
+
+        # Update display image. This is a square version of the camera image.
+        #self.display_pixmap = QtGui.QPixmap(w, w)
+        self.display_pixmap = QtGui.QPixmap(w,w)
+        painter = QtGui.QPainter(self.display_pixmap)
+
+        # Draw background.
+        painter.setPen(QtGui.QColor(0,0,0))
+        painter.setBrush(QtGui.QColor(0,0,0))
+        painter.drawRect(0, 0, w, h)
+
+        # Draw image.
+        destination_rect = QtCore.QRect(0, 0, self.camera_image.width(), self.camera_image.height())
+
+        painter.drawImage(destination_rect, self.camera_image)
+
+        # Draw bounding rectangle.
+        if (w != h):
+            pen = QtGui.QPen(QtGui.QColor(255,0,0))
+            pen.setWidth(self.display_pixmap.width()/self.width())
+            painter.setPen(pen)
+            painter.setBrush(QtGui.QColor(0,0,0,0))
+            painter.drawRect(destination_rect)
+
+        # Update zoomed image (if necessary).
+        if (self.zoom_im_x >= 0):
+            self.zoom_image = QtGui.QImage(self.zoom_size, self.zoom_size, QtGui.QImage.Format_RGB32)
+            painter = QtGui.QPainter(self.zoom_image)
+            painter.drawPixmap(0, 0, self.display_pixmap, self.zoom_im_x, self.zoom_im_y, self.zoom_size, self.zoom_size)
+            
+        else:
+            self.zoom_image = False
+
+        self.e_size = round(5 * float(self.width())/float(w))
+
+        # Update offsets.
+        if (qpd_data["x_off1"] == 0.0):
+            self.draw_e1 = False
+        else:
+            self.draw_e1 = True
+            self.x_off1 = ((qpd_data["x_off1"])/float(w))*float(self.width())
+            self.y_off1 = ((qpd_data["y_off1"])/float(w))*float(self.height())
+            
+        if (qpd_data["x_off2"] == 0.0):
+            self.draw_e2 = False
+        else:
+            self.draw_e2 = True
+            self.x_off2 = ((qpd_data["x_off2"])/float(w))*float(self.width())
+            self.y_off2 = ((qpd_data["y_off2"])/float(w))*float(self.height())
+
+        if ("rois" in qpd_data) and (self.rois is None):
+            self.rois = [];
+            for roi in qpd_data["rois"]:
+                new_roi = []
+                new_roi = [(roi[0]/float(w))*float(self.height()),
+                           (roi[1]/float(w))*float(self.height()),
+                           (roi[2]/float(w))*float(self.width()),
+                           (roi[3]/float(w))*float(self.width())]
+                self.rois.append(new_roi)
+            
+        # Red dot in camera display
+        self.show_dot = not self.show_dot
+        
+        self.update()
+        
+    def keyPressEvent(self, event):
+        if not self.haveFunctionality():
+            return
+        
+        if self.adjust_mode:
+            which_key = event.key()
+
+            # Adjust the distance between the spots which
+            # is considered to be zero.
+            if (which_key == QtCore.Qt.Key_Comma):
+                self.functionality.adjustZeroDist(-0.1)
+            elif (which_key == QtCore.Qt.Key_Period):
+                self.functionality.adjustZeroDist(+0.1)
+
+    def mouseMoveEvent(self, event):
+        if not self.haveFunctionality():
+            return
+
+        self.zoom_im_x = -1
+        if self.display_pixmap and self.adjust_mode:
+            half_size = self.zoom_size / 2
+            x_bound = half_size * self.width()/self.display_pixmap.width() + 1
+            y_bound = half_size * self.height()/self.display_pixmap.height() + 1
+            if (event.x() >= x_bound) and (event.x() < (self.width() - x_bound)):
+                if (event.y() >= y_bound) and (event.y() < (self.height() - y_bound)):
+                    self.zoom_im_x = event.x() * self.display_pixmap.width()/self.width() - half_size
+                    self.zoom_im_y = event.y() * self.display_pixmap.height()/self.height() - half_size
+                    self.zoom_x = event.x() - half_size
+                    self.zoom_y = event.y() - half_size
+
+    def paintEvent(self, event):
+        painter = QtGui.QPainter(self)
+        if self.display_pixmap:
+
+            # Draw image.
+            destination_rect = QtCore.QRect(0, 0, self.width(), self.height())
+            painter.setRenderHint(QtGui.QPainter.SmoothPixmapTransform)
+            painter.drawPixmap(destination_rect, self.display_pixmap)
+
+            # Draw alignment lines & zoomed image.
+            if self.adjust_mode:
+
+                painter.setPen(QtGui.QColor(100,100,100))
+                painter.drawLine(0.0, 0.5*self.height(), self.width(), 0.5*self.height())
+                #for mult in [0.25, 0.5, 0.75]:
+                #    painter.drawLine(mult*self.width(), 0.0, mult*self.width(), self.height())
+
+                if self.zoom_image:
+                    destination_rect = QtCore.QRect(self.zoom_x, self.zoom_y, self.zoom_size, self.zoom_size)
+                    painter.drawImage(destination_rect, self.zoom_image)
+                    painter.setPen(QtGui.QColor(200,200,200))
+                    painter.setBrush(QtGui.QColor(0,0,0,0))
+                    painter.drawRect(destination_rect)
+
+                painter.setPen(QtGui.QColor(255,255,255))
+
+            # Draw focus lock feedback.
+            else:
+                painter.setRenderHint(QtGui.QPainter.Antialiasing)
+                painter.setBrush(QtGui.QColor(0,0,0,0))
+
+                # Round green circles for fitting mode.
+                painter.setPen(QtGui.QColor(0,255,0))
+                if self.draw_e1:
+                    painter.drawEllipse(QtCore.QPointF(self.x_off1, self.y_off1), 
+                                        self.e_size, self.e_size)
+                if self.draw_e2:
+                    painter.drawEllipse(QtCore.QPointF(self.x_off2, self.y_off2), 
+                                        self.e_size, self.e_size)
+                
+                # display rois
+                if self.draw_rois:
+                    for roi in self.rois:
+                        painter.setPen(QtGui.QColor(255,0,0))
+                        painter.drawRect(roi[0], roi[2], roi[1]-roi[0], roi[3]-roi[2])
+
+
+            # display red dot (or not)
+            if self.show_dot:
+                painter.setPen(QtGui.QColor(255,0,0))
+                painter.drawRect(2,2,2,2)
+                
+                    
+        else:
+            painter.setPen(self.background)
+            painter.setBrush(self.background)
+            painter.drawRect(0, 0, self.width(), self.height())
+
 class QStatusDisplay(QtWidgets.QWidget):
     """
     Base class for (most) of the display widgets.

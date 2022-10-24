@@ -39,7 +39,7 @@ class LumencorLaser(object):
         except:
             print(traceback.format_exc())
             self.live = False
-            print("Failed to connect to Lumencor Laser at ip:", ip)
+            print("Failed to connect to Lumencor Laser at ip:", self.ip)
 
         if self.live:
             [self.pmin, self.pmax] = self.getPowerRange()

@@ -316,6 +316,7 @@ class SpinCamera(object):
             
     def startAcquisition(self):
         self.image_event_handler.resetNImages()
+        ###### SHOULD THIS BE HEIGHT THEN WIDTH???
         self.frame_size = (self.getProperty("Width").getValue(),
                            self.getProperty("Height").getValue())
         self.frames.clear()
