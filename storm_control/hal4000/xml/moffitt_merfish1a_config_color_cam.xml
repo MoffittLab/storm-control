@@ -5,7 +5,7 @@
   <directory type="directory">C:/Data/</directory>
   
   <!-- The setup name -->
-  <setup_name type="string">moffitt_merfish1a_2cam</setup_name>
+  <setup_name type="string">moffitt_merfish1a_color</setup_name>
 
   <!-- The ui type, this is 'classic' or 'detached' -->
   <ui_type type="string">detached</ui_type>
@@ -104,85 +104,49 @@
     -->
 
     <!-- Camera control. -->
-    <!--
-	Note that the cameras must have the names "camera1", "camera2", etc..
-	
-	Cameras are either "master" (they provide their own hardware timing)
-	or "slave" they are timed by another camera. Each time the cameras
-	are started the slave cameras are started first, then the master cameras.
-    -->
 
 	<camera1>
       <class_name type="string">Camera</class_name>
       <module_name type="string">storm_control.hal4000.camera.camera</module_name>
       <camera>
 		<master type="boolean">True</master>
-		<class_name type="string">HamamatsuCameraControl</class_name>
-		<module_name type="string">storm_control.hal4000.camera.hamamatsuCameraControl</module_name>
+		<class_name type="string">PointGreyCameraControl</class_name>
+		<module_name type="string">storm_control.hal4000.camera.pointgreyCameraControl</module_name>
 		<parameters>
+			<!-- Which camera to use -->
+			<camera_id type="string">22141930</camera_id>
 
-		  <!-- Which camera to use -->
-		  <camera_id type="int">1</camera_id>
+			<!-- Preset values - camera specific values that are fixed -->
+			<presets>
+				<!-- FLIR camera general properties -->
+				<PixelFormat type="string">Mono16</PixelFormat> <!-- Mono12Packed/Mono12p -->
+				<ExposureAuto type="string">Off</ExposureAuto>
+				<GainAuto type="string">Off</GainAuto>
+				<BlackLevelClampingEnable type="boolean">False</BlackLevelClampingEnable>
+		
+				<!-- Blackfly specific properties --> 
+				<AcquisitionFrameRateEnable type="boolean">True</AcquisitionFrameRateEnable>
 
-  		  <!-- Trigger properties of the camera -->
-		  <trigger_source type="string">INTERNAL</trigger_source>
-  		  <trigger_polarity type="string">POSITIVE</trigger_polarity>
-		  <trigger_active type="string">SYNCREADOUT</trigger_active>
-
-		  <!-- These are the display defaults, not the camera range. -->
-		  <default_max type="int">2000</default_max> 
-		  <default_min type="int">100</default_min>
-		  <flip_horizontal type="boolean">False</flip_horizontal>
-		  <flip_vertical type="boolean">False</flip_vertical>
-		  <transpose type="boolean">True</transpose>
-		  
-		  <!-- These can be changed / editted. -->
-
-		  <!-- This is the extension to use (if any) when saving data from this camera. -->
-		  <extension type="string">c1</extension>
-		  
-		  <!-- Whether or not data from this camera is saved during filming. -->
-		  <saved type="boolean">True</saved>
+				<!-- Properties to control relationship between exposure and frame rate -->
+				<CameraControlExposure type="boolean">False</CameraControlExposure>
+			</presets>
+	  
+			<!-- These are the display defaults, not the camera range. -->
+			<default_max type="int">200</default_max> 
+			<default_min type="int">30</default_min>
+			<flip_horizontal type="boolean">False</flip_horizontal>
+			<flip_vertical type="boolean">False</flip_vertical>
+			<transpose type="boolean">True</transpose>
+			
+			<!-- This is the extension to use (if any) when saving data from this camera. -->
+			<extension type="string"></extension>
+	  
+			<!-- Whether or not data from this camera is saved during filming. -->
+			<saved type="boolean">True</saved>
 
 		</parameters>
       </camera>
     </camera1>
-	
-	<camera2>
-      <class_name type="string">Camera</class_name>
-      <module_name type="string">storm_control.hal4000.camera.camera</module_name>
-      <camera>
-		<master type="boolean">False</master>
-		<class_name type="string">HamamatsuCameraControl</class_name>
-		<module_name type="string">storm_control.hal4000.camera.hamamatsuCameraControl</module_name>
-		<parameters>
-
-		  <!-- Which camera to use -->
-		  <camera_id type="int">0</camera_id>
-		  
-  		  <!-- Trigger properties of the camera -->
-		  <trigger_source type="string">EXTERNAL</trigger_source>
-  		  <trigger_polarity type="string">POSITIVE</trigger_polarity>
-		  <trigger_active type="string">SYNCREADOUT</trigger_active>
-
-		  <!-- These are the display defaults, not the camera range. -->
-		  <default_max type="int">2000</default_max> 
-		  <default_min type="int">100</default_min>
-		  <flip_horizontal type="boolean">True</flip_horizontal>
-		  <flip_vertical type="boolean">False</flip_vertical>
-		  <transpose type="boolean">True</transpose>
-
-		  <!-- These can be changed / editted. -->
-
-		  <!-- This is the extension to use (if any) when saving data from this camera. -->
-		  <extension type="string">c2</extension>
-		  
-		  <!-- Whether or not data from this camera is saved during filming. -->
-		  <saved type="boolean">True</saved>
-
-		</parameters>
-      </camera>
-    </camera2>
 
     <!-- DAQ control -->
     <daq>
