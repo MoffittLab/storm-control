@@ -74,13 +74,13 @@
 
       <!-- List objectives available on this setup here. -->
       <parameters>
-		<flip_horizontal desc="Flip image horizontal (mosaic)" type="boolean">True</flip_horizontal>
-		<flip_vertical desc="Flip image vertical (mosaic)" type="boolean">True</flip_vertical>
-		<transpose desc="Transpose image (mosaic)" type="boolean">Ture</transpose>
+		<flip_horizontal desc="Flip image horizontal (mosaic)" type="boolean">False</flip_horizontal>
+		<flip_vertical desc="Flip image vertical (mosaic)" type="boolean">False</flip_vertical>
+		<transpose desc="Transpose image (mosaic)" type="boolean">False</transpose>
 
 		<objective desc="Current objective" type="string" values="obj1,obj2">obj1</objective>
-		<obj1 desc="Objective 1" type="custom">60x,0.1028,0.0,0.0</obj1>
-		<obj2 desc="Objective 2" type="custom">10x,0.617,0.0,0.0</obj2>
+		<obj1 desc="Objective 1" type="custom">60x,0.1092,0.0,0.0</obj1>
+		<obj2 desc="Objective 2" type="custom">10x,0.650,0.0,0.0</obj2>
       </parameters>
     </mosaic>
 
@@ -98,22 +98,7 @@
 		<time_base type="string">camera1</time_base>
       </parameters>
     </timing>
-	
-	<!-- Hardware camera timing module -->
-	<!--
-	<hardware_timing>
-		<class_name type="string">HardwareTiming</class_name>
-		<module_name type="string">storm_control.hal4000.timing.hardwareTiming</module_name>
-		<configuration>
-			<counter_fn_name>daq.counter.ctc_task</counter_fn_name>
-			<fps type="float">10.0</fps>
-			<fps_min type="float">1.0</fps_min>
-			<fps_max type="float">1000.0</fps_max>
-		</configuration>
-	</hardware_timing>
-	-->
 
-  
     <!--
 	Everything else is optional, but you probably want at least one camera.
     -->
@@ -132,54 +117,73 @@
       <module_name type="string">storm_control.hal4000.camera.camera</module_name>
       <camera>
 		<master type="boolean">True</master>
-		<class_name type="string">PointGreyCameraControl</class_name>
-		<module_name type="string">storm_control.hal4000.camera.pointgreyCameraControl</module_name>
+		<class_name type="string">HamamatsuCameraControl</class_name>
+		<module_name type="string">storm_control.hal4000.camera.hamamatsuCameraControl</module_name>
 		<parameters>
-			<!-- Which camera to use -->
-			<camera_id type="string">20232532</camera_id>
-	  
-			<!-- Preset values - camera specific values that are fixed -->
-			<presets>
-				<!-- FLIR camera general properties -->
-				<PixelFormat type="string">Mono16</PixelFormat> <!-- Mono12Packed/Mono12p -->
-				<ExposureAuto type="string">Off</ExposureAuto>
-				<GainAuto type="string">Off</GainAuto>
-				<BlackLevelClampingEnable type="boolean">False</BlackLevelClampingEnable>
-		
-				<!-- Blackfly specific properties --> 
-				<AcquisitionFrameRateEnable type="boolean">True</AcquisitionFrameRateEnable>
 
-				<!-- Properties to control relationship between exposure and frame rate -->
-				<CameraControlExposure type="boolean">False</CameraControlExposure>
-			</presets>
-	  
-			<!-- These are the display defaults, not the camera range. -->
-			<default_max type="int">200</default_max> 
-			<default_min type="int">30</default_min>
-			<flip_horizontal type="boolean">False</flip_horizontal>
-			<flip_vertical type="boolean">False</flip_vertical>
-			<transpose type="boolean">True</transpose>
-			
-			<!--
-					  What value to use for Trigger Activation, 'RisingEdge' or
-					  'FallingEdge'. 'FallingEdge' is the default if not specified.
-				  -->
-		    <!--<trigger_activation type="string">RisingEdge</trigger_activation>
-		    <trigger_source type="string">Line0</trigger_source>
-			-->
+		  <!-- Which camera to use -->
+		  <camera_id type="int">0</camera_id>
 
-			<!-- These can be changed / editted. -->
+  		  <!-- Trigger properties of the camera -->
+		  <trigger_source type="string">INTERNAL</trigger_source>
+  		  <trigger_polarity type="string">POSITIVE</trigger_polarity>
+		  <trigger_active type="string">SYNCREADOUT</trigger_active>
 
-			<!-- This is the extension to use (if any) when saving data from this camera. -->
-			<extension type="string"></extension>
-	  
-			<!-- Whether or not data from this camera is saved during filming. -->
-			<saved type="boolean">True</saved>
+		  <!-- These are the display defaults, not the camera range. -->
+		  <default_max type="int">2000</default_max> 
+		  <default_min type="int">100</default_min>
+		  <flip_horizontal type="boolean">False</flip_horizontal>
+		  <flip_vertical type="boolean">False</flip_vertical>
+		  <transpose type="boolean">True</transpose>
+		  
+		  <!-- These can be changed / editted. -->
+
+		  <!-- This is the extension to use (if any) when saving data from this camera. -->
+		  <extension type="string">c1</extension>
+		  
+		  <!-- Whether or not data from this camera is saved during filming. -->
+		  <saved type="boolean">True</saved>
 
 		</parameters>
       </camera>
     </camera1>
+	
+	<camera2>
+      <class_name type="string">Camera</class_name>
+      <module_name type="string">storm_control.hal4000.camera.camera</module_name>
+      <camera>
+		<master type="boolean">False</master>
+		<class_name type="string">HamamatsuCameraControl</class_name>
+		<module_name type="string">storm_control.hal4000.camera.hamamatsuCameraControl</module_name>
+		<parameters>
 
+		  <!-- Which camera to use -->
+		  <camera_id type="int">1</camera_id>
+		  
+  		  <!-- Trigger properties of the camera -->
+		  <trigger_source type="string">EXTERNAL</trigger_source>
+  		  <trigger_polarity type="string">POSITIVE</trigger_polarity>
+		  <trigger_active type="string">SYNCREADOUT</trigger_active>
+
+		  <!-- These are the display defaults, not the camera range. -->
+		  <default_max type="int">2000</default_max> 
+		  <default_min type="int">100</default_min>
+		  <flip_horizontal type="boolean">True</flip_horizontal>
+		  <flip_vertical type="boolean">False</flip_vertical>
+		  <transpose type="boolean">True</transpose>
+
+		  <!-- These can be changed / editted. -->
+
+		  <!-- This is the extension to use (if any) when saving data from this camera. -->
+		  <extension type="string">c2</extension>
+		  
+		  <!-- Whether or not data from this camera is saved during filming. -->
+		  <saved type="boolean">True</saved>
+
+		</parameters>
+      </camera>
+    </camera2>
+	
     <!-- DAQ control -->
     <daq>
       <module_name type="string">storm_control.sc_hardware.nationalInstruments.nidaqModule</module_name>
@@ -192,22 +196,10 @@
 			 camera fire pin. Other films will just use the camera fire pin directly.
 		-->
 		<timing>
-		  <camera_fire_pin type="string">/Dev1/PFI8</camera_fire_pin>
+		  <camera_fire_pin type="string">/Dev1/PFI9</camera_fire_pin>
 		  <counter type="string">/Dev1/ctr0</counter>
 		  <counter_out type="string">/Dev1/PFI12</counter_out>
 		</timing>
-		
-		<!--
-   			 This counter provides the hardware time base for the cameras.
-   		 -->
-   		 <!--<counter>
-   			 <ctc_task>
-   				 <source type="string">/Dev1/ctr0</source>
-   				 <frequency type="float">10</frequency>
-   			 </ctc_task>
-   		 </counter>
-		 -->
-
 
 			<!-- These are the things that we provide DAQ functionality for.
 				 Other modules will request them with a 'get functionality'
@@ -217,19 +209,19 @@
 	
 			<ilm750>
 			  <do_task>
-				<source type="string">/Dev1/port0/line7</source>
+				<source type="string">/Dev1/port0/line1</source>
 			  </do_task>
 			</ilm750>
 
 			<ilm635>
 			  <do_task>
-				<source type="string">/Dev1/port0/line6</source>
+				<source type="string">/Dev1/port0/line2</source>
 			  </do_task>
 			</ilm635>
 
 			<ilm545>
 			  <do_task>
-				<source type="string">/Dev1/port0/line5</source>
+				<source type="string">/Dev1/port0/line3</source>
 			  </do_task>
 			</ilm545>
 
@@ -241,19 +233,19 @@
 
 			<ilm473>
 			  <do_task>
-				<source type="string">/Dev1/port0/line2</source>
+				<source type="string">/Dev1/port0/line5</source>
 			  </do_task>
 			</ilm473>
 
 			<ilm445>
 			  <do_task>
-				<source type="string">/Dev1/port0/line1</source>
+				<source type="string">/Dev1/port0/line7</source>
 			  </do_task>
 			</ilm445>
 
 			<ilm405>
 			  <do_task>
-				<source type="string">/Dev1/port0/line0</source>
+				<source type="string">/Dev1/port0/line6</source>
 			  </do_task>
 			</ilm405>
 
@@ -286,15 +278,15 @@
 		<z_stage type="string">mcl_zstage</z_stage>
 		<parameters>
 			<scan>
-				<offset_threshold type="float">500</offset_threshold><!-- This is in nanometers and get converted by Hal to microns-->
+				<offset_threshold type="float">1000</offset_threshold><!-- This is in nanometers and get converted by Hal to microns, was 500-->
 			</scan>
 		  <find_sum>
 			<step_size type="float">1.0</step_size>
 		  </find_sum>
 		  <locked>
 			<buffer_length type="int">5</buffer_length>
-			<offset_threshold type="float">250</offset_threshold><!-- This is in nanometers and get converted by Hal to microns-->
-			<lock_gain type="float">0.15</lock_gain>
+			<offset_threshold type="float">500</offset_threshold><!-- This is in nanometers and get converted by Hal to microns, was 250-->
+			<lock_gain type="float">0.15</lock_gain> <!--both lock gain and lock gain max were 0.15-->
 			<lock_gain_max type="float">0.15</lock_gain_max>
 		  </locked>
 		  <jump_size type="float">0.1</jump_size>
@@ -374,9 +366,9 @@
 		<ct_fn_name type="string">daq.ir_laser.ct_task</ct_fn_name>
       </configuration>
     </ldc_irlaser>
-	
     
-	<!-- Marzhauzer stage -->
+	
+	<!--Marzhauzer stage -->
 	<!--
     <marzhauser_stage>
       <module_name type="string">storm_control.sc_hardware.marzhauser.marzhauserModule</module_name>
@@ -390,24 +382,6 @@
     </marzhauser_stage>
 	-->
 	
-    <zaber_xy_stage>
-      <module_name type="string">storm_control.sc_hardware.zaber.zaberXYModule</module_name>
-      <class_name type="string">ZaberXYStage</class_name>
-
-      <configuration>
-		<baudrate type="int">115200</baudrate>
-		<port type="string">COM6</port>
-		
-		<stage_id type="int">2</stage_id>
-		<unit_to_um type="float">0.15625</unit_to_um>
-		<velocity type="float">60000</velocity> <!--<in um/s default 60 mm/s>-->
-		<x_min type="float">45000</x_min>
-		<x_max type="float">56000</x_max>
-		<y_min type="float">52000</y_min>
-		<y_max type="float">67000</y_max>
-      </configuration>
-    </zaber_xy_stage>
-
     <!-- Mad City Labs Z piezo -->
     <mcl_zstage>
       <module_name type="string">storm_control.sc_hardware.madCityLabs.mclVoltageZModule</module_name>
@@ -423,11 +397,20 @@
 		  <warning_low type="float">10.0</warning_low>
 		</parameters>
 		<ao_fn_name type="string">daq.mcl.ao_task</ao_fn_name>
-		<microns_to_volts type="float">0.05</microns_to_volts>
+		<microns_to_volts type="float">0.05</microns_to_volts> <!--was 0.05-->
       </configuration>
     </mcl_zstage>
 
     <!-- Stage control GUI -->
+<!--    <stage>
+      <class_name type="string">Stage</class_name>
+      <module_name type="string">storm_control.hal4000.stage.stage</module_name>
+      <configuration>
+		<stage_functionality type="string">marzhauser_stage</stage_functionality>
+      </configuration>
+    </stage> -->
+	
+	<!-- Zaber Stage control GUI -->
     <stage>
       <class_name type="string">Stage</class_name>
       <module_name type="string">storm_control.hal4000.stage.stage</module_name>
@@ -435,6 +418,24 @@
 		<stage_functionality type="string">zaber_xy_stage</stage_functionality>
       </configuration>
     </stage>
+	
+	<zaber_xy_stage>
+      <module_name type="string">storm_control.sc_hardware.zaber.zaberXYModule</module_name>
+      <class_name type="string">ZaberXYStage</class_name>
+
+      <configuration>
+		<baudrate type="int">115200</baudrate>
+		<port type="string">COM6</port>
+		
+		<stage_id type="int">2</stage_id>
+		<unit_to_um type="float">0.15625</unit_to_um>
+		<velocity type="float">60000</velocity> <!-- in um/s default 60 mm/s -->
+		<x_min type="float">42300</x_min>
+		<x_max type="float">57000</x_max> <!-- from 56 to 57K -->
+		<y_min type="float">50000</y_min> 
+		<y_max type="float">70000</y_max>
+      </configuration>
+    </zaber_xy_stage>
 
     <!-- TCP control -->
     <tcp_control>
@@ -453,11 +454,11 @@
       <configuration>
 		<parameters>
 		  <offset_has_center_bar type="boolean">True</offset_has_center_bar>
-		  <offset_maximum type="float">2.5</offset_maximum>
-		  <offset_minimum type="float">-2.5</offset_minimum>
-		  <offset_warning_high type="float">2.25</offset_warning_high>
-		  <offset_warning_low type="float">-2.25</offset_warning_low>	  
-		  <sum_maximum type="float">100000.0</sum_maximum>
+		  <offset_maximum type="float">2.5</offset_maximum> <!--was 2.5-->
+		  <offset_minimum type="float">-2.5</offset_minimum> <!--was -2.5-->
+		  <offset_warning_high type="float">2.25</offset_warning_high> <!--was 2.25-->
+		  <offset_warning_low type="float">-2.25</offset_warning_low>	<!--was -2.25-->  
+		  <sum_maximum type="float">100000.0</sum_maximum> <!--was 100000-->
 		  <sum_minimum type="float">50.0</sum_minimum>
 		  <sum_warning_low type="float">10000.0</sum_warning_low>
 		</parameters>
@@ -468,10 +469,10 @@
 		<offset_file type="string">C:\Users\MERFISH4\Code\storm-control\storm_control\hal4000\cam_offsets_moffitt_merfish4.txt</offset_file>
 		<sigma type="float">3.0</sigma>
 		<uc480_dll type="string">c:/windows/system32/uc480_64.dll</uc480_dll>
-		<x_width type="int">1000</x_width><!--400-->
-		<y_width type="int">250</y_width>
+		<x_width type="int">340</x_width><!--400--> <!-- to 340 2/6/25-->
+		<y_width type="int">100</y_width>
 		<!--<y_width type="int">100</y_width>-->
-		<units_to_microns type="float">-1.2</units_to_microns>
+		<units_to_microns type="float">-0.30</units_to_microns> <!-- Updated 9-18-2025. Previously -0.332, -1.2, -0.18 -->
 	  </configuration>
     </uc480_camera>
 

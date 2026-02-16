@@ -1,0 +1,1154 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<kilroy_configuration num_valves = "4" num_pumps = "1">
+
+ <valve_commands>
+	<valve_cmd name = "Image Buffer">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "4" port_ID = "6"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Wash Buffer">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "4" port_ID = "5"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "TCEP">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "4" port_ID = "8"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "SSC">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "4" port_ID = "1"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Seal">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "4" port_ID = "7"></valve_pos>
+    </valve_cmd>
+
+    <valve_cmd name = "Set Hyb 1">
+      <valve_pos valve_ID = "1" port_ID = "2"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 2">
+      <valve_pos valve_ID = "1" port_ID = "3"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 3">
+      <valve_pos valve_ID = "1" port_ID = "4"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 4">
+      <valve_pos valve_ID = "1" port_ID = "5"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 5">
+      <valve_pos valve_ID = "1" port_ID = "6"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 6">
+      <valve_pos valve_ID = "1" port_ID = "7"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 7">
+      <valve_pos valve_ID = "1" port_ID = "8"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 8">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "2"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 9">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "3"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 10">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "4"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 11">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "5"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 12">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "6"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 13">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "7"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 14">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "8"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 15">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "2"></valve_pos>
+    </valve_cmd>
+    <valve_cmd name = "Set Hyb 16">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "3"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 17">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "4"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 18">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "5"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 19">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "6"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 20">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "7"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 21">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "8"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 22">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "4" port_ID = "2"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 23">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "4" port_ID = "3"></valve_pos>
+    </valve_cmd>
+	<valve_cmd name = "Set Hyb 24">
+		<valve_pos valve_ID = "1" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "2" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "3" port_ID = "1"></valve_pos>
+		<valve_pos valve_ID = "4" port_ID = "4"></valve_pos>
+    </valve_cmd>
+
+ </valve_commands>
+
+ <pump_commands type = "syringe">
+	<pump_cmd name = "4 mL @ 2mL/min">
+       <pump_config speed = "2.0" port_name = "Pull" volume = "4.0"></pump_config>
+    </pump_cmd>
+	
+	<pump_cmd name = "1 mL @ 2mL/min">
+       <pump_config speed = "2.0" port_name = "Pull" volume = "1.0"></pump_config>
+    </pump_cmd>
+	
+	<pump_cmd name = "1.5 mL @ 0.5mL/min">
+       <pump_config speed = "0.5" port_name = "Pull" volume = "1.5"></pump_config>
+    </pump_cmd>
+	
+	<pump_cmd name = "0.75 mL @ 0.1mL/min">
+       <pump_config speed = "0.1" port_name = "Pull" volume = "0.75"></pump_config>
+    </pump_cmd>
+	
+	<pump_cmd name = "0.375 mL @ 0.1mL/min">
+       <pump_config speed = "0.1" port_name = "Pull" volume = "0.375"></pump_config>
+    </pump_cmd>
+
+
+	<pump_cmd name = "1.4 mL @ 0.1mL/min">
+       <pump_config speed = "0.1" port_name = "Pull" volume = "1.4"></pump_config>
+    </pump_cmd>
+
+	<pump_cmd name = "0.75 mL @ 0.5mL/min">
+       <pump_config speed = "0.5" port_name = "Pull" volume = "0.75"></pump_config>
+    </pump_cmd>
+
+	<pump_cmd name = "0.5 mL @ 0.1mL/min">
+       <pump_config speed = "0.1" port_name = "Pull" volume = "0.5"></pump_config>
+    </pump_cmd>
+
+	<pump_cmd name = "Full Exhaust">
+       <pump_config speed = "100.0" port_name = "Exhaust" volume = "0.0"></pump_config>
+    </pump_cmd>
+
+ </pump_commands>
+
+ <kilroy_protocols>
+    <protocol name = "Flow Image Buffer">
+		<pump duration = "5">Full Exhaust</pump>
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<valve duration = "5">Seal</valve>
+		<pump duration = "5">Full Exhaust</pump>
+    </protocol> 
+	
+    <protocol name = "Flow SSC">
+		<pump duration = "5">Full Exhaust</pump>
+		<valve duration = "5">SSC</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<valve duration = "5">Seal</valve>
+		<pump duration = "5">Full Exhaust</pump>
+    </protocol> 
+	
+	<protocol name = "Flow TCEP Buffer">
+		<pump duration = "5">Full Exhaust</pump>
+		<valve duration = "5">TCEP</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<valve duration = "5">Seal</valve>
+		<pump duration = "5">Full Exhaust</pump>
+    </protocol>    
+	
+	<protocol name = "Cleave">
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Initial flush with 0.5 mL -->
+        <valve duration = "5">TCEP</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 900 s total incubation with a pull of 0.75 mL -->
+		<pump duration = "450">0.375 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		<pump duration = "450">0.375 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Flush with 1.5 mL -->
+        <valve duration = "5">SSC</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<valve duration = "5">Seal</valve>
+		<pump duration = "5">Full Exhaust</pump>
+    </protocol>
+	
+	<protocol name = "Exhaust System">
+		<pump duration = "5">Full Exhaust</pump>
+    </protocol>
+
+	<!--
+	<protocol name = "Broken Coverslip 1">
+        <valve duration = "5">SSC</valve>
+		<pump duration = "90">1.5 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+	</protocol>
+	-->
+
+	<protocol name = "Hybridize 1">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 1</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+
+	<protocol name = "Hybridize 2">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 2</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+
+	<protocol name = "Hybridize 3">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 3</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+
+	<protocol name = "Hybridize 4">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 4</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+		<protocol name = "Hybridize 5">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 5</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 6">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 6</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 7">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 7</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 8">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 8</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 9">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 9</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 10">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 10</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 11">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 11</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 12">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 12</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 13">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 13</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 14">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 14</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 15">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 15</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 16">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 16</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 17">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 17</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 18">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 18</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 19">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 19</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 20">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 20</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 21">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 21</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 22">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 22</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 23">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 23</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Hybridize 24">
+		<!-- Initial flush of hyb buffer -->
+        <valve duration = "5">Set Hyb 24</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 840s of incubation with 1.4 mL pull -->
+        <pump duration = "845">1.4 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Initial flush of wash buffer --> 
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "105">0.75 mL @ 0.5mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- 300s of incubation with 0.5 mL pull --> 
+        <pump duration = "315">0.5 mL @ 0.1mL/min</pump>
+		<pump duration = "5">Full Exhaust</pump>
+		
+		<!-- Flush with 1.5 mL of image buffer --> 
+		<valve duration = "5">Image Buffer</valve>
+		<pump duration = "195">1.5 mL @ 0.5mL/min</pump>		
+		<pump duration = "5">Full Exhaust</pump>
+
+		<!-- Seal system --> 
+		<valve duration = "5">Seal</valve>
+    </protocol>
+	
+	<protocol name = "Prime 24">
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">SSC</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 1</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 2</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 3</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 4</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 5</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 6</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="3">Full Exhaust</pump>
+		<valve duration = "3">Set Hyb 7</valve>
+        <pump duration = "35">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 8</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 9</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 10</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 11</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 12</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 13</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 14</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 15</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 16</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 17</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 18</valve>
+		<pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 19</valve>
+		<pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 20</valve>
+		<pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 21</valve>
+		<pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 22</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 23</valve>
+		<pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 24</valve>
+		<pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">TCEP</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Image Buffer</valve>
+        <pump duration = "32">1 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">SSC</valve>
+		<pump duration = "32">1 mL @ 2mL/min</pump>
+		<pump duration="2">Full Exhaust</pump>
+
+		<valve duration = "5">Seal</valve>
+     </protocol>
+	 
+	 <protocol name = "Cleanup">
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">SSC</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 1</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 2</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 3</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 4</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 5</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 6</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="3">Full Exhaust</pump>
+		<valve duration = "3">Set Hyb 7</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 8</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 9</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 10</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 11</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 12</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 13</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 14</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 15</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 16</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 17</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 18</valve>
+		<pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 19</valve>
+		<pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 20</valve>
+		<pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 21</valve>
+		<pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 22</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 23</valve>
+		<pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Set Hyb 24</valve>
+		<pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">TCEP</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Wash Buffer</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">Image Buffer</valve>
+        <pump duration = "130">4 mL @ 2mL/min</pump>
+		
+		<pump duration="2">Full Exhaust</pump>
+		<valve duration = "5">SSC</valve>
+		<pump duration = "130">4 mL @ 2mL/min</pump>
+		<pump duration="2">Full Exhaust</pump>
+
+		<valve duration = "5">Seal</valve>
+     </protocol>
+	
+ </kilroy_protocols>
+</kilroy_configuration>

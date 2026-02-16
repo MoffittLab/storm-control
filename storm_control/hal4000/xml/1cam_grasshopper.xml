@@ -2,9 +2,8 @@
 <config>
 
   <!-- The starting directory. -->
-  <!--<directory type="directory">/media/xavier/scratch/</directory>-->
-  <!--<directory type="directory">/media/9CA4A092A4A07086/</directory>-->
-  <directory type="directory">/media/nas/Temp4/</directory>
+  <directory type="directory">C:\Data\Temp\</directory>
+  
   <!-- The setup name -->
   <setup_name type="string">grasshopper_test</setup_name>
 

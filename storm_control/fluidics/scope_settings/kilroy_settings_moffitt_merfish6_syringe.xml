@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<settings><!-- Default kilroy settings for jfocal -->
+  <!-- Valve parameters -->
+  <valves_com_port type="string">COM6</valves_com_port>	<!-- COM port of serial connection to valves -->  
+  <num_simulated_valves type="int">0</num_simulated_valves><!-- Number of valves to simulate (Defaults to 0) -->
+  <valve_class type="string">valves.hamilton_mvp4</valve_class><!-- Type of valves: Simulated, Hamilton, or Titan -->
+	
+    <!-- Pump parameters -->
+  <pump_type type="string">syringe</pump_type>
+  <pump_class type="string">pumps.hamilton_psd4</pump_class><!-- Control class for pump -->
+  <pump_com_port type="string">COM7</pump_com_port><!-- COM port of serial connection to pump -->
+  <simulate_pump type="boolean">False</simulate_pump><!-- Simulate pump? (Defaults to False) -->
+  <flip_flow_direction type="boolean">False</flip_flow_direction><!-- Flip the direction defined as forward? -->
+  <port_names type="string">Exhaust,Blocked 1,Blocked 2,Pull</port_names>
+  <syringe_volume type="float">5.0</syringe_volume>
+	
+  <!-- General Kilroy parameters -->
+  <verbose type="boolean">False</verbose>
+  <serial_verbose type="boolean">False</serial_verbose>  <!-- display serial commands? -->
+  <tcp_port type="int">9500</tcp_port> <!-- TCP/IP port for local communication with Dave -->
+  <protocols_file type = "">kilroy_config_merfish6_syringe.xml</protocols_file><!-- Location of default protocol -->
+  <commands_file type = "">kilroy_config_merfish6_syringe.xml</commands_file><!-- Location of default commands -->
+
+</settings>
