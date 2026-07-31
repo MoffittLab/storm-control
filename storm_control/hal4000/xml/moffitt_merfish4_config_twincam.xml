@@ -430,10 +430,21 @@
 		<stage_id type="int">2</stage_id>
 		<unit_to_um type="float">0.15625</unit_to_um>
 		<velocity type="float">60000</velocity> <!-- in um/s default 60 mm/s -->
+		
+		<!-- 
 		<x_min type="float">42300</x_min>
-		<x_max type="float">57000</x_max> <!-- from 56 to 57K -->
+		<x_max type="float">60000</x_max> < from 56 to 57K, upped to 60k 02/21/26 CARL>
 		<y_min type="float">50000</y_min> 
 		<y_max type="float">70000</y_max>
+		-->
+		
+		
+		<!-- For Panorama chamber test BJW 05/16/2026 -->
+		<x_min type="float">25000</x_min>
+		<x_max type="float">70000</x_max> 
+		<y_min type="float">30000</y_min> 
+		<y_max type="float">90000</y_max>
+		
       </configuration>
     </zaber_xy_stage>
 
