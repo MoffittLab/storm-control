@@ -27,16 +27,29 @@ class APump():
         self.serial_verbose = parameters.get("serial_verbose", False)
         self.high_res_mode = parameters.get("high_res", True)
         self.syringe_volume = parameters.get("syringe_volume", 12.5)
+        self.syringe_type = parameters.get("syringe_type", "standard")
+        
         self.min_velocity_in_steps_s = 2
         self.max_velocity_in_steps_s = 10000
         self.min_stroke_in_steps = 0
         self.max_stroke_in_steps = None
 
+        # Check syringe type
+        if self.syringe_type == "standard":
+            self.high_res_step = 24000.0
+            self.low_res_step = 3000.0
+        elif self.syringe_type == "smooth_flow":
+            self.high_res_step = 192000.0
+            self.low_res_step = 24000.0
+        else:
+            print("The provided syringe type for the PSD4 is not valid")
+            assert False
+
         # Define the resolution mode
         if self.high_res_mode:
-            self.max_stroke_in_steps = 24000.0
+            self.max_stroke_in_steps = self.high_res_step
         else:
-            self.max_stroke_in_steps = 3000.0
+            self.max_stroke_in_steps = self.low_res_step
            
         self.steps_to_volume = self.syringe_volume/self.max_stroke_in_steps
         
@@ -56,9 +69,11 @@ class APump():
         # Report configuration
         print("--------------------------------")
         print("Configured PSD4 Syringe Pump")
+        print("   PSD4 Type: " + str(self.syringe_type))
         print("   Syringe Volume: " + str(self.syringe_volume) + " mL")
         print("   High Res Mode: " + str(self.high_res_mode))
-        print("   Minimum Speed: " + str(self.min_velocity_in_steps_s * self.syringe_volume/100) + " mL/min")
+        print("   Steps for Full Fill: " + str(self.max_stroke_in_steps))
+        print("   Minimum Speed: " + str(self.min_velocity_in_steps_s * self.syringe_volume * (4/self.high_res_step) * 60 ) + " mL/min")
 
     def initializePump(self):
         message = "/1ZR\r"
@@ -149,7 +164,7 @@ class APump():
         start_pos = 3
         end_pos = response.find('\x03'.encode())
         vel_in_units = float(response[start_pos:end_pos].decode())
-        vel_in_mLmin = vel_in_units*self.syringe_volume*60/6000
+        vel_in_mLmin = vel_in_units*self.syringe_volume*60/(self.high_res_step/4)
     
         # Determine valve numerical position
         message = '/1?24000R\r'
@@ -169,7 +184,6 @@ class APump():
             
     def setPort(self, port_id):
         # Check to see if it is within the number of ports
-        print("Found port:", port_id)
         if port_id >= self.num_ports:
             print("An invalid port was requested for the PSD4")
             assert False
@@ -190,7 +204,7 @@ class APump():
         
         # Convert the requested speed to steps per s
         fill_speed_in_mLs = fill_speed_in_mLmin/60
-        new_speed_value = int(fill_speed_in_mLs/self.syringe_volume * 6000)
+        new_speed_value = int((fill_speed_in_mLs/self.syringe_volume) * (self.high_res_step/4))
         
         # Coerce to the hardware limits
         if new_speed_value < self.min_velocity_in_steps_s:

@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <settings><!-- Default kilroy settings for jfocal -->
   <!-- Valve parameters -->
-  <valves_com_port type="string">COM4</valves_com_port>	<!-- COM port of serial connection to valves -->  
+  <valves_com_port type="string">COM4</valves_com_port><!-- COM port of serial connection to valves -->  
   <num_simulated_valves type="int">0</num_simulated_valves><!-- Number of valves to simulate (Defaults to 0) -->
   <valve_type type="string">Hamilton</valve_type><!-- Type of valves: Simulated, Hamilton, or Titan -->
 	
-    <!-- Pump parameters -->
+  <!-- Parastaltic Pump parameters -->
+  
+  <!--<pump_class type="string">pumps.gilson_mp3</pump_class>--><!-- Control class for pump -->
+  <!--<pump_com_port type="string">COM12</pump_com_port>--><!-- COM port of serial connection to pump -->
+  <!--<pump_ID type="int">30</pump_ID>--><!-- ID of Pump -->
+  <!--<simulate_pump type="boolean">False</simulate_pump>--><!-- Simulate pump? (Defaults to False) -->
+  <!--<flip_flow_direction type="boolean">False</flip_flow_direction>--><!-- Flip the direction defined as forward? -->
+  
+  <!-- Syringe Pump parameters -->
   <pump_type type="string">syringe</pump_type>
   <pump_class type="string">pumps.hamilton_psd4</pump_class><!-- Control class for pump -->
+  <syringe_type type="string">smooth_flow</syringe_type><!-- Set the specific variant of the PSD4 -->
   <pump_com_port type="string">COM7</pump_com_port><!-- COM port of serial connection to pump -->
   <simulate_pump type="boolean">False</simulate_pump><!-- Simulate pump? (Defaults to False) -->
   <flip_flow_direction type="boolean">False</flip_flow_direction><!-- Flip the direction defined as forward? -->
-  <!-- <port_names type="string">Exhaust,Blocked 1,Blocked 2,Pull</port_names> -->
   <port_names type="string">Exhaust,Blocked 1,Pull</port_names>
   <syringe_volume type="float">5.0</syringe_volume>
-	
+  <min_speed type="float">0.0125</min_speed><!-- speed limit for pump control text boxes-->
+  <max_speed type="float">62.5</max_speed><!-- speed limit for pump control text boxes-->
+  <min_volume type="float">0</min_volume><!-- pull limit for pump control text boxes-->
+  <max_volume type="float">5.0</max_volume><!-- speed limit for pump control text boxes-->
+
   <!-- General Kilroy parameters -->
   <verbose type="boolean">False</verbose>
   <serial_verbose type="boolean">False</serial_verbose>  <!-- display serial commands? -->
