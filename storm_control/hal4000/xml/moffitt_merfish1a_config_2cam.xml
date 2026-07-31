@@ -439,8 +439,8 @@
 		<offset_file type="string">C:\Users\MERFISH1a\Code\storm-control\storm_control\hal4000\cam_offsets_moffitt_merfish1a.txt</offset_file>
 		<sigma type="float">1.0</sigma>
 		<uc480_dll type="string">c:/windows/system32/uc480_64.dll</uc480_dll>
-		<x_width type="int">220</x_width>
-		<y_width type="int">300</y_width>
+		<x_width type="int">200</x_width> <!--<x_width type="int">200</x_width>-->
+		<y_width type="int">300</y_width> <!--<y_width type="int">300</y_width>-->
 		<units_to_microns type="float">-1.1</units_to_microns>
 	  </configuration>
     </uc480_camera>

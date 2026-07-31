@@ -169,6 +169,7 @@ class APump():
             
     def setPort(self, port_id):
         # Check to see if it is within the number of ports
+        print("Found port:", port_id)
         if port_id >= self.num_ports:
             print("An invalid port was requested for the PSD4")
             assert False

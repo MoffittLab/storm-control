@@ -11,7 +11,8 @@
   <pump_com_port type="string">COM7</pump_com_port><!-- COM port of serial connection to pump -->
   <simulate_pump type="boolean">False</simulate_pump><!-- Simulate pump? (Defaults to False) -->
   <flip_flow_direction type="boolean">False</flip_flow_direction><!-- Flip the direction defined as forward? -->
-  <port_names type="string">Exhaust,Blocked 1,Blocked 2,Pull</port_names>
+  <!-- <port_names type="string">Exhaust,Blocked 1,Blocked 2,Pull</port_names> -->
+  <port_names type="string">Exhaust,Blocked 1,Pull</port_names>
   <syringe_volume type="float">5.0</syringe_volume>
 	
   <!-- General Kilroy parameters -->
