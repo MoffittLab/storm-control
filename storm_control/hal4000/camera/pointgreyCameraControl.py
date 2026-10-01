@@ -23,6 +23,7 @@ class PointGreyCameraControl(cameraControl.HWCameraControl):
         kwds["config"] = config
         super().__init__(**kwds)
         self.is_master = is_master
+        self.trigger_width = False
         
         # The camera functionality.
         self.camera_functionality = cameraFunctionality.CameraFunctionality(camera_name = self.camera_name,
@@ -98,11 +99,38 @@ class PointGreyCameraControl(cameraControl.HWCameraControl):
         # Also, we connected the master camera to the DAQ card
         # using it's OPTO-OUT connection.
         #
+        # If 'exposure_mode' is 'TriggerWidth' the exposure time is the
+        # width of the trigger pulse, so it is set by whatever provides
+        # the trigger (i.e. timing.hardwareTiming) and not by the camera.
+        #
+        # If 'trigger_ready_line' is specified then this line will output
+        # the camera's 'FrameTriggerWait' signal, which is high when the
+        # camera can accept a trigger.
+        #
         else:
-            self.camera.setProperty("TriggerMode", "On")
-            self.camera.setProperty("TriggerSource", "Line3")
+            self.trigger_width = (config.get("exposure_mode", "Timed") == "TriggerWidth")
+            if self.trigger_width:
+                default_activation = "LevelHigh"
+            else:
+                default_activation = "FallingEdge"
+
+            # The trigger settings can only be changed reliably with triggering off.
+            self.camera.setProperty("TriggerMode", "Off")
+            if self.camera.hasProperty("TriggerSelector"):
+                self.camera.setProperty("TriggerSelector", "FrameStart")
+            self.camera.setProperty("TriggerSource", config.get("trigger_source", "Line3"))
+            if config.has("exposure_mode"):
+                self.camera.setProperty("ExposureMode", config.get("exposure_mode"))
             self.camera.setProperty("TriggerOverlap", "ReadOut")
-            self.camera.setProperty("TriggerActivation", config.get("trigger_activation", "FallingEdge"))
+            self.camera.setProperty("TriggerActivation", config.get("trigger_activation", default_activation))
+            self.camera.setProperty("TriggerMode", "On")
+
+            if config.has("trigger_ready_line"):
+                self.camera.setProperty("LineSelector", config.get("trigger_ready_line"))
+                self.camera.setProperty("LineMode", "Output")
+                self.camera.setProperty("LineSource", "FrameTriggerWait")
+                if self.camera.hasProperty("LineInverter"):
+                    self.camera.setProperty("LineInverter", config.get("trigger_ready_invert", False))
 
         #
         # Dictionary of Point Grey specific camera parameters.
@@ -135,13 +163,14 @@ class PointGreyCameraControl(cameraControl.HWCameraControl):
                                                            min_value = self.camera.getProperty("AcquisitionFrameRate").getMinimum()))
                                                            
             
-        # Slave cameras can set "ExposureTime".
+        # Slave cameras can set "ExposureTime", unless the exposure time
+        # is set by the width of the trigger pulse.
         #
         # FIXME? If this is too large then the slave will be taking images
         #        at a different rate than master. Maybe this should be
         #        limited? Automatically set based on "master" frame rate?
         #
-        else:
+        elif not self.trigger_width:
             self.pgrey_props["ExposureTime"] = True
             self.parameters.add(params.ParameterRangeFloat(description = "Exposure time (us)",
                                                            name = "ExposureTime",
@@ -316,8 +345,9 @@ class PointGreyCameraControl(cameraControl.HWCameraControl):
                 self.parameters.setv("exposure_time", 1.0e-6 * self.camera.getProperty("ExposureTime").getValue())
 
             # For slave cameras, just copy 'ExposureTime' to 'exposure_time' for
-            # the benefit of the camera parameters viewer.
-            else:
+            # the benefit of the camera parameters viewer. In 'TriggerWidth' mode
+            # the exposure time is set by timing.hardwareTiming instead.
+            elif not self.trigger_width:
                 self.parameters.setv("exposure_time", 1.0e-6 * self.camera.getProperty("ExposureTime").getValue())
 
             # Update camera frame size.

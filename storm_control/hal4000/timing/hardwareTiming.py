@@ -6,6 +6,11 @@ such as a counter on a DAQ card.
 
 Note: In this case it is enforced that there are no master cameras.
 
+Optionally the counter can output pulses whose high time is the camera
+exposure time (for cameras configured in 'TriggerWidth' exposure mode),
+and the counter can wait for an external start trigger, such as the
+signal indicating that all the cameras are ready for a trigger.
+
 Hazen 10/19
 """
 
@@ -16,6 +21,7 @@ import storm_control.sc_library.parameters as params
 
 import storm_control.hal4000.halLib.halFunctionality as halFunctionality
 import storm_control.hal4000.halLib.halMessage as halMessage
+import storm_control.hal4000.halLib.halMessageBox as halMessageBox
 import storm_control.hal4000.halLib.halModule as halModule
 
 
@@ -39,12 +45,14 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
     expected with timing.timing.
     """
     newFrame = QtCore.pyqtSignal(object)
+    startTimedOut = QtCore.pyqtSignal(str)
     stopped = QtCore.pyqtSignal()
     
-    def __init__(self, counter_functionality = None, name = None, **kwds):
+    def __init__(self, counter_functionality = None, name = None, start_timeout = 0.0, **kwds):
         super().__init__(**kwds)
 
         self.counter_fn = counter_functionality
+        self.exposure_time = None
         self.film_length = None
         self.fps = None
         self.name = name
@@ -52,6 +60,20 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
 
         self.counter_fn.setDoneFn(self.handleStopped)
         self.counter_fn.setSignalFn(self.handleNewFrame)
+
+        #
+        # If the counter waits for an external start trigger (i.e. all the
+        # cameras reporting that they are ready) this timer catches the case
+        # where the trigger never arrives, for example because a camera did
+        # not start, so that HAL does not wait forever.
+        #
+        self.start_timer = QtCore.QTimer(self)
+        self.start_timer.setSingleShot(True)
+        self.start_timer.timeout.connect(self.handleStartTimeout)
+        if self.counter_fn.hasTrigger() and (start_timeout > 0.0):
+            self.start_timer.setInterval(int(1000.0 * start_timeout))
+        else:
+            self.start_timer = None
 
     def getCameraName(self):
         return self.name
@@ -70,8 +92,29 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
             self.newFrame.emit(frame)
         self.n_pulses += 1
 
+    def handleStartTimeout(self):
+        #
+        # Note that handleNewFrame() is called from a DAQmx thread, so we
+        # check the pulse count here rather than stopping the timer there.
+        #
+        if (self.n_pulses > 0):
+            return
+        self.counter_fn.stopOutput()
+        msg = "Hardware timing start trigger not received after "
+        msg += "{0:.1f} seconds. Check that all the cameras are ready.".format(0.001 * self.start_timer.interval())
+        print(">> Warning", msg)
+        self.stopped.emit()
+        self.startTimedOut.emit(msg)
+
     def handleStopped(self):
         self.stopped.emit()
+
+    def setExposureTime(self, exposure_time):
+        """
+        If this is not None the counter high time is set to the exposure
+        time, otherwise the counter has a 50% duty cycle.
+        """
+        self.exposure_time = exposure_time
 
     def setFilmLength(self, film_length):
         self.film_length = film_length
@@ -86,11 +129,21 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
         cycles = 0
         if self.film_length is not None:
             cycles = self.film_length
-            
-        self.counter_fn.pwmOutput(duty_cycle = 0.5, cycles = cycles)
+
+        if self.exposure_time is not None:
+            self.counter_fn.pulseOutput(high_time = self.exposure_time,
+                                        low_time = 1.0/self.fps - self.exposure_time,
+                                        cycles = cycles)
+        else:
+            self.counter_fn.pwmOutput(duty_cycle = 0.5, cycles = cycles)
+
+        if self.start_timer is not None:
+            self.start_timer.start()
 
     def stopCounter(self):
-        self.counter_fn.pwmOutput(duty_cycle = 0.0)
+        if self.start_timer is not None:
+            self.start_timer.stop()
+        self.counter_fn.stopOutput()
         self.film_length = None
     
 
@@ -109,6 +162,19 @@ class HardwareTiming(halModule.HalModule):
         self.configuration = module_params.get("configuration")
         self.allow_master = self.configuration.get("allow_master", False)
 
+        # The minimum time (in seconds) that the counter output must be low
+        # between pulses, for example so that the cameras can re-arm.
+        self.min_low_time = self.configuration.get("min_low_time", 0.0)
+
+        # The time (in seconds) to wait for an external start trigger before
+        # giving up, zero means wait forever. Only used if the counter has
+        # a start trigger.
+        self.start_timeout = self.configuration.get("start_timeout", 10.0)
+
+        # If 'exposure_time' is specified then the counter high time is the
+        # exposure time, otherwise the counter has a 50% duty cycle.
+        self.use_exposure_time = self.configuration.has("exposure_time")
+
         self.parameters = params.StormXMLObject()
 
         #
@@ -120,18 +186,46 @@ class HardwareTiming(halModule.HalModule):
                                                        value = self.configuration.get("fps", 0.1),
                                                        min_value = self.configuration.get("fps_min", 0.001),
                                                        max_value = self.configuration.get("fps_max", 10000.0)))
-    
+
+        if self.use_exposure_time:
+            self.parameters.add(params.ParameterRangeFloat(description = "Exposure time (seconds)",
+                                                           name = "exposure_time",
+                                                           value = self.configuration.get("exposure_time"),
+                                                           min_value = self.configuration.get("exposure_time_min", 1.0e-5),
+                                                           max_value = self.configuration.get("exposure_time_max", 10.0)))
+            self.checkTiming(self.parameters)
+
+    def checkTiming(self, parameters):
+        """
+        Check that the exposure time is compatible with the frame rate.
+        """
+        if self.use_exposure_time:
+            fps = parameters.get("fps")
+            exposure_time = parameters.get("exposure_time")
+            low_time = 1.0/fps - exposure_time
+            if (low_time < self.min_low_time):
+                msg = "Exposure time {0:.6f}s is too long for {1:.3f} FPS, ".format(exposure_time, fps)
+                msg += "the maximum is {0:.6f}s.".format(1.0/fps - self.min_low_time)
+                raise halExceptions.HalException(msg)
+
     def handleResponse(self, message, response):
         if message.isType("get functionality"):
             
             if (message.getData()["extra data"] == "counter"):
                 htf = HardwareTimingFunctionality(counter_functionality = response.getData()["functionality"],
-                                                  name = self.module_name)
+                                                  name = self.module_name,
+                                                  start_timeout = self.start_timeout)
+                htf.startTimedOut.connect(self.handleStartTimedOut)
                 self.hardware_timing_functionality = htf
                 self.hardware_timing_functionality.setFPS(self.parameters.get("fps"))
+                if self.use_exposure_time:
+                    self.hardware_timing_functionality.setExposureTime(self.parameters.get("exposure_time"))
 
                 self.sendMessage(halMessage.HalMessage(m_type = "configuration",
                                                        data = {"properties" : {}}))
+
+    def handleStartTimedOut(self, msg):
+        halMessageBox.halMessageBoxInfo(msg, is_error = True)
 
     def processMessage(self, message):
 
@@ -194,8 +288,18 @@ class HardwareTiming(halModule.HalModule):
             message.addResponse(halMessage.HalMessageResponse(source = self.module_name,
                                                               data = {"old parameters" : self.parameters.copy()}))
             p = message.getData()["parameters"].get(self.module_name)
-            self.parameters.setv("fps", p.get("fps"))
-            self.hardware_timing_functionality.setFPS(p.get("fps"))
+            new_p = self.parameters.copy()
+            new_p.setv("fps", p.get("fps"))
+            if self.use_exposure_time:
+                # Older parameters files won't have an exposure time.
+                new_p.setv("exposure_time", p.get("exposure_time", self.parameters.get("exposure_time")))
+            self.checkTiming(new_p)
+
+            self.parameters.setv("fps", new_p.get("fps"))
+            self.hardware_timing_functionality.setFPS(new_p.get("fps"))
+            if self.use_exposure_time:
+                self.parameters.setv("exposure_time", new_p.get("exposure_time"))
+                self.hardware_timing_functionality.setExposureTime(new_p.get("exposure_time"))
             message.addResponse(halMessage.HalMessageResponse(source = self.module_name,
                                                               data = {"new parameters" : self.parameters}))
 

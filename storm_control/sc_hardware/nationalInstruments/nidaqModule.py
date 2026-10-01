@@ -5,6 +5,7 @@ HAL interface to National Instruments cards.
 Hazen 04/17
 """
 import numpy
+import time
 
 import storm_control.hal4000.halLib.halMessage as halMessage
 
@@ -95,27 +96,40 @@ class CTTaskFunctionality(NidaqFunctionality):
     """
     Counter output.
     """
-    def __init__(self, frequency = None, retriggerable = True, trigger_source = None, **kwds):
+    def __init__(self, frequency = None, retriggerable = True, trigger_source = None,
+                 trigger_filter = None, trigger_rising_edge = True, **kwds):
         super().__init__(**kwds)
         self.frequency = frequency
         self.retriggerable = retriggerable
+        self.trigger_filter = trigger_filter
+        self.trigger_rising_edge = trigger_rising_edge
         self.trigger_source = trigger_source
-            
+
+    def configureTrigger(self):
+        if self.trigger_source is not None:
+            self.task.setTrigger(trigger_source = self.trigger_source,
+                                 retriggerable = self.retriggerable,
+                                 rising_edge = self.trigger_rising_edge,
+                                 filter_width = self.trigger_filter)
+
+    def hasTrigger(self):
+        return self.trigger_source is not None
+
     def pwmOutput(self, duty_cycle = 0.5, cycles = 0):
-        if self.task is not None:
-            self.task.stopTask()
-            self.task.clearTask()
-            self.task = None
-            
+        self.stopOutput()
         if (duty_cycle > 0.0):
             self.task = nicontrol.CounterOutput(source = self.source,
                                                 frequency = self.frequency,
                                                 duty_cycle = duty_cycle)
-            if self.trigger_source is not None:
-                self.task.setTrigger(trigger_source = self.trigger_source,
-                                     retriggerable = self.retriggerable)
+            self.configureTrigger()
             self.task.setCounter(cycles)
             self.task.startTask()
+
+    def stopOutput(self):
+        if self.task is not None:
+            self.task.stopTask()
+            self.task.clearTask()
+            self.task = None
 
 
 class CTCTaskFunctionality(CTTaskFunctionality):
@@ -127,21 +141,29 @@ class CTCTaskFunctionality(CTTaskFunctionality):
         self.done_fn = done_fn
         self.signal_fn = signal_fn        
 
+    def pulseOutput(self, high_time = None, low_time = None, cycles = 0):
+        """
+        Output a pulse train with the specified high and low times (in seconds).
+        """
+        self.stopOutput()
+        self.task = nicontrol.CounterOutputCallback(done_fn = self.done_fn,
+                                                    signal_fn = self.signal_fn,
+                                                    source = self.source,
+                                                    high_time = high_time,
+                                                    low_time = low_time)
+        self.configureTrigger()
+        self.task.setCounter(cycles)
+        self.task.startTask()
+
     def pwmOutput(self, duty_cycle = 0.5, cycles = 0):
-        if self.task is not None:
-            self.task.stopTask()
-            self.task.clearTask()
-            self.task = None
-            
+        self.stopOutput()
         if (duty_cycle > 0.0):
             self.task = nicontrol.CounterOutputCallback(done_fn = self.done_fn,
                                                         signal_fn = self.signal_fn,
                                                         source = self.source,
                                                         frequency = self.frequency,
                                                         duty_cycle = duty_cycle)
-            if self.trigger_source is not None:
-                self.task.setTrigger(trigger_source = self.trigger_source,
-                                     retriggerable = self.retriggerable)
+            self.configureTrigger()
             self.task.setCounter(cycles)
             self.task.startTask()
 
@@ -289,21 +311,13 @@ class NidaqModule(daqModule.DaqModule):
                 elif (task_name == "ao_task"):
                     ni_task = AOTaskFunctionality(source = task_params.get("source"))
                 elif (task_name == "ct_task"):
-                    trigger_source = None
-                    if task_params.has("trigger_source"):
-                        trigger_source = task_params.get("trigger_source")
                     ni_task = CTTaskFunctionality(source = task_params.get("source"),
                                                   frequency = task_params.get("frequency"),
-                                                  retriggerable = task_params.get("retriggerable", False),
-                                                  trigger_source = trigger_source)
+                                                  **self.counterTriggerParams(task_params))
                 elif (task_name == "ctc_task"):
-                    trigger_source = None
-                    if task_params.has("trigger_source"):
-                        trigger_source = task_params.get("trigger_source")
                     ni_task = CTCTaskFunctionality(source = task_params.get("source"),
                                                    frequency = task_params.get("frequency"),
-                                                   retriggerable = task_params.get("retriggerable", False),
-                                                   trigger_source = trigger_source)                    
+                                                   **self.counterTriggerParams(task_params))
                 elif (task_name == "do_task"):
                     ni_task = DOTaskFunctionality(source = task_params.get("source"))
                 elif (task_name == "wv_task"):
@@ -316,6 +330,33 @@ class NidaqModule(daqModule.DaqModule):
                 
                 self.daq_fns[daq_fn_name] = ni_task
                 self.daq_fns_by_source[ni_task.getSource()] = ni_task
+
+    def counterTriggerParams(self, task_params):
+        """
+        Start trigger settings for counter tasks, if any.
+
+        trigger_source - The PFI line to use as a start trigger, e.g. "/Dev1/PFI0".
+        retriggerable - Whether every edge restarts the counter (default False).
+        trigger_edge - "rising" (default) or "falling".
+        trigger_filter - Minimum pulse width in seconds for the trigger line
+                         digital filter (default no filter).
+        """
+        trigger_source = None
+        if task_params.has("trigger_source"):
+            trigger_source = task_params.get("trigger_source")
+
+        trigger_filter = None
+        if task_params.has("trigger_filter"):
+            trigger_filter = task_params.get("trigger_filter")
+
+        trigger_edge = task_params.get("trigger_edge", "rising")
+        if not (trigger_edge in ["rising", "falling"]):
+            raise NidaqModuleException("Unknown trigger edge '" + trigger_edge + "'")
+
+        return {"retriggerable" : task_params.get("retriggerable", False),
+                "trigger_filter" : trigger_filter,
+                "trigger_rising_edge" : (trigger_edge == "rising"),
+                "trigger_source" : trigger_source}
 
     def filmTiming(self, message):
         """

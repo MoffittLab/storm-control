@@ -236,17 +236,31 @@ class AnalogWaveformOutput(NIDAQTask):
 class CounterOutput(NIDAQTask):
     """
     Counter output class.
+
+    The pulse train is specified either by frequency & duty_cycle, or
+    by high_time & low_time (in seconds). The latter is useful when the
+    high time sets the camera exposure (Blackfly 'TriggerWidth' mode).
     """
-    def __init__(self, source = None, frequency = None, duty_cycle = None, initial_delay = 0.0, **kwds):
+    def __init__(self, source = None, frequency = None, duty_cycle = None,
+                 high_time = None, low_time = None, initial_delay = 0.0, **kwds):
         super().__init__(**kwds)
         with getLock():
-            self.CreateCOPulseChanFreq(source,
-                                       "",
-                                       PyDAQmx.DAQmx_Val_Hz,
-                                       PyDAQmx.DAQmx_Val_Low,
-                                       initial_delay,
-                                       frequency,
-                                       duty_cycle)
+            if high_time is not None:
+                self.CreateCOPulseChanTime(source,
+                                           "",
+                                           PyDAQmx.DAQmx_Val_Seconds,
+                                           PyDAQmx.DAQmx_Val_Low,
+                                           initial_delay,
+                                           low_time,
+                                           high_time)
+            else:
+                self.CreateCOPulseChanFreq(source,
+                                           "",
+                                           PyDAQmx.DAQmx_Val_Hz,
+                                           PyDAQmx.DAQmx_Val_Low,
+                                           initial_delay,
+                                           frequency,
+                                           duty_cycle)
 
     def setCounter(self, number_samples = None):
         """
@@ -268,7 +282,17 @@ class CounterOutput(NIDAQTask):
             self.DisableStartTrig()
                 
     def setTrigger(self, trigger_source = None, retriggerable = True,
-				rising_edge = True):
+                   rising_edge = True, filter_width = None):
+        """
+        Configure a digital edge start trigger. If filter_width (seconds) is
+        specified the trigger line is digitally filtered so that pulses shorter
+        than this are ignored. NI coerces this to the nearest supported value.
+        """
+        if filter_width is not None:
+            with getLock():
+                self.SetDigEdgeStartTrigDigFltrEnable(1)
+                self.SetDigEdgeStartTrigDigFltrMinPulseWidth(filter_width)
+
         if retriggerable:
             with getLock():
                 self.SetStartTrigRetriggerable(1)
@@ -308,7 +332,7 @@ class CounterOutputCallback(CounterOutput):
         return 0
     
     def SignalCallback(self):
-        if self.signal_fn() is not None:
+        if self.signal_fn is not None:
             self.signal_fn()
         return 0
         
