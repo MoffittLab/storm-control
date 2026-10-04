@@ -114,8 +114,14 @@
 
 	  <!--
 	      Camera output line for the FrameTriggerWait (trigger ready)
-	      signal. Set 'trigger_ready_invert' to True if the board needs
-	      the opposite polarity (e.g. with an opto-isolated output).
+	      signal.
+
+	      Polarity: keep 'trigger_ready_invert' False and set the trigger
+	      ready board's input to active-low. With the opto-isolated output
+	      (Line1) and a pull-up on the board, the camera then pulls the line
+	      LOW only while it is ready, so an unplugged or unconfigured camera
+	      reads as NOT ready (fail-safe). Inverting here would make the
+	      idle, pulled-up line read as ready.
 	  -->
 	  <trigger_ready_line type="string">Line1</trigger_ready_line>
 	  <trigger_ready_invert type="boolean">False</trigger_ready_invert>
@@ -184,7 +190,12 @@
 	    waits for the first rising edge of the gated 1 kHz signal from the
 	    trigger ready board. 'retriggerable' must be False, otherwise every
 	    burst of the 1 kHz signal between frames would restart the counter.
-	    'trigger_filter' (seconds) rejects glitches shorter than this.
+
+	    'trigger_filter' (seconds) is optional. It enables the DAQ's digital
+	    filter on the trigger line, rejecting pulses shorter than this. The
+	    trigger ready board already filters its inputs and always starts the
+	    1 kHz signal with a full-width pulse, so it is normally not needed.
+	    Enable it only if noise on the cable to the DAQ causes false starts.
 	-->
 	<counter>
 	  <ctc_task>
@@ -193,7 +204,7 @@
 	    <trigger_source type="string">/Dev1/PFI0</trigger_source>
 	    <trigger_edge type="string">rising</trigger_edge>
 	    <retriggerable type="boolean">False</retriggerable>
-	    <trigger_filter type="float">6.425e-6</trigger_filter>
+	    <!-- <trigger_filter type="float">6.425e-6</trigger_filter> -->
 	  </ctc_task>
 	</counter>
       </configuration>
