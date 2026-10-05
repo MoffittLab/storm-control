@@ -18,6 +18,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from storm_control.fluidics.valves.qtValveControl import QtValveControl
 from storm_control.fluidics.valves.hamilton import HamiltonMVP
 from storm_control.fluidics.valves.idex import TitanValve
+import storm_control.sc_library.parameters as params
 
 # ----------------------------------------------------------------------------------------
 # ValveChain Class Definition
@@ -179,9 +180,11 @@ class StandAlone(QtWidgets.QMainWindow):
         super(StandAlone, self).__init__(parent)
 
         # scroll area widget contents - layout
-        self.valve_chain = ValveChain(COM_port = 2,
-                                      verbose = True,
-                                      num_simulated_valves = 2)
+        parameters = params.StormXMLObject()
+        parameters.add("valves_com_port", "COM2")
+        parameters.add("verbose", True)
+        parameters.add("num_simulated_valves", 2)
+        self.valve_chain = ValveChain(parameters = parameters)
         
         # central widget
         self.centralWidget = QtWidgets.QWidget()
