@@ -97,7 +97,7 @@ class ValveChain(QtWidgets.QWidget):
     # Close class
     # ------------------------------------------------------------------------------------
     def close(self):
-        if self.verbose: "Print closing valve chain"
+        if self.verbose: print("Closing valve chain")
         self.valve_chain.close()
 
     # ------------------------------------------------------------------------------------
