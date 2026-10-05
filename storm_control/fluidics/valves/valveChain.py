@@ -56,7 +56,7 @@ class ValveChain(QtWidgets.QWidget):
                 
             # Create the valve chain using newer loading protocols
             else:
-                valve_module = importlib.import_module(parameters.get("valve_class", "storm_control.fluidics.valves.hamilton_mvp"))
+                valve_module = importlib.import_module(parameters.get("valve_class", "storm_control.fluidics.valves.hamilton_mvp4"))
                 self.valve_chain = valve_module.AValveChain(parameters = parameters)
                 
         # Create QtValveControl widgets for each valve in the chain
