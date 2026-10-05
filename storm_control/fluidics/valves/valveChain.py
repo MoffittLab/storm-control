@@ -37,10 +37,10 @@ class ValveChain(QtWidgets.QWidget):
         self.verbose = parameters.get("verbose", False)
         self.poll_time = 2000
         
-        # Simulate the valves?
+        # Simulate the valves? Classes loaded via valve_class handle their own simulation
         num_simulated_valves = parameters.get("num_simulated_valves", 0)
-        
-        if num_simulated_valves > 0:
+
+        if num_simulated_valves > 0 and not parameters.has("valve_class"):
             self.valve_chain = HamiltonMVP(com_port = 0,
 				   num_simulated_valves = num_simulated_valves,
 				   verbose = self.verbose)
