@@ -141,7 +141,7 @@ class ValveChain(QtWidgets.QWidget):
     # Determine number of valves
     # ------------------------------------------------------------------------------------
     def howManyValves(self):
-        return self.valve_chain.howManyValves
+        return self.num_valves
 
     # ------------------------------------------------------------------------------------
     # Update valve status display with the current status each valve in the chain
