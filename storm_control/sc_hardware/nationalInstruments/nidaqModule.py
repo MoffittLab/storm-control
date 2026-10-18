@@ -112,18 +112,43 @@ class CTTaskFunctionality(NidaqFunctionality):
                                  rising_edge = self.trigger_rising_edge,
                                  filter_width = self.trigger_filter)
 
+    def createTask(self, **kwds):
+        return nicontrol.CounterOutput(source = self.source, **kwds)
+
     def hasTrigger(self):
         return self.trigger_source is not None
 
-    def pwmOutput(self, duty_cycle = 0.5, cycles = 0):
+    def prepareOutput(self, cycles = 0, commit = False, **task_kwds):
+        """
+        Create and configure the counter task without starting it. If commit
+        is True the task is also committed, so that startOutput() only has
+        to start it (about a millisecond instead of tens of milliseconds).
+        """
         self.stopOutput()
+        self.task = self.createTask(**task_kwds)
+        self.configureTrigger()
+        self.task.setCounter(cycles)
+        if commit:
+            self.task.commitTask()
+
+    def preparePwmOutput(self, duty_cycle = 0.5, cycles = 0, commit = False):
+        self.prepareOutput(cycles = cycles,
+                           commit = commit,
+                           frequency = self.frequency,
+                           duty_cycle = duty_cycle)
+
+    def pwmOutput(self, duty_cycle = 0.5, cycles = 0):
         if (duty_cycle > 0.0):
-            self.task = nicontrol.CounterOutput(source = self.source,
-                                                frequency = self.frequency,
-                                                duty_cycle = duty_cycle)
-            self.configureTrigger()
-            self.task.setCounter(cycles)
-            self.task.startTask()
+            self.preparePwmOutput(duty_cycle = duty_cycle, cycles = cycles)
+            self.startOutput()
+        else:
+            self.stopOutput()
+
+    def startOutput(self):
+        """
+        Start a task created by one of the prepare methods.
+        """
+        self.task.startTask()
 
     def stopOutput(self):
         if self.task is not None:
@@ -141,31 +166,27 @@ class CTCTaskFunctionality(CTTaskFunctionality):
         self.done_fn = done_fn
         self.signal_fn = signal_fn        
 
+    def createTask(self, **kwds):
+        return nicontrol.CounterOutputCallback(done_fn = self.done_fn,
+                                              signal_fn = self.signal_fn,
+                                              source = self.source,
+                                              **kwds)
+
+    def preparePulseOutput(self, high_time = None, low_time = None, cycles = 0, commit = False):
+        """
+        Prepare a pulse train with the specified high and low times (in seconds).
+        """
+        self.prepareOutput(cycles = cycles,
+                           commit = commit,
+                           high_time = high_time,
+                           low_time = low_time)
+
     def pulseOutput(self, high_time = None, low_time = None, cycles = 0):
         """
         Output a pulse train with the specified high and low times (in seconds).
         """
-        self.stopOutput()
-        self.task = nicontrol.CounterOutputCallback(done_fn = self.done_fn,
-                                                    signal_fn = self.signal_fn,
-                                                    source = self.source,
-                                                    high_time = high_time,
-                                                    low_time = low_time)
-        self.configureTrigger()
-        self.task.setCounter(cycles)
-        self.task.startTask()
-
-    def pwmOutput(self, duty_cycle = 0.5, cycles = 0):
-        self.stopOutput()
-        if (duty_cycle > 0.0):
-            self.task = nicontrol.CounterOutputCallback(done_fn = self.done_fn,
-                                                        signal_fn = self.signal_fn,
-                                                        source = self.source,
-                                                        frequency = self.frequency,
-                                                        duty_cycle = duty_cycle)
-            self.configureTrigger()
-            self.task.setCounter(cycles)
-            self.task.startTask()
+        self.preparePulseOutput(high_time = high_time, low_time = low_time, cycles = cycles)
+        self.startOutput()
 
     def setDoneFn(self, done_fn):
         self.done_fn = done_fn

@@ -246,6 +246,15 @@
 	<exposure_time_min type="float">1.0e-5</exposure_time_min>
 	<exposure_time_max type="float">10.0</exposure_time_max>
 	<min_low_time type="float">0.001</min_low_time>
+
+	<!--
+	    Test option: create and commit the counter task while the film is
+	    being set up, so that it starts within about a millisecond of the
+	    cameras being started instead of tens of milliseconds later. This
+	    mimics the old master camera time base and makes it more likely
+	    that a slow-to-arm camera misses the first trigger.
+	-->
+	<prearm_counter type="boolean">True</prearm_counter>
       </configuration>
     </hardware_timing>
 

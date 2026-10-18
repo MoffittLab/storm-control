@@ -14,6 +14,8 @@ signal indicating that all the cameras are ready for a trigger.
 Hazen 10/19
 """
 
+import datetime
+
 from PyQt5 import QtCore
 
 import storm_control.sc_library.halExceptions as halExceptions
@@ -57,6 +59,7 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
         self.fps = None
         self.name = name
         self.n_pulses = 0
+        self.prepared = False
         self.running = False
 
         self.counter_fn.setDoneFn(self.handleStopped)
@@ -132,8 +135,12 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
     def setFPS(self, fps):
         self.fps = float(fps)
         
-    def startCounter(self):
-        self.n_pulses = 0
+    def prepareCounter(self, commit = False):
+        """
+        Create and configure the counter task, but don't start it. If commit
+        is True the task is also committed to the DAQ so that startCounter()
+        is fast.
+        """
         self.counter_fn.setFrequency(self.fps)
 
         cycles = 0
@@ -141,22 +148,40 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
             cycles = self.film_length
 
         if self.exposure_time is not None:
-            self.counter_fn.pulseOutput(high_time = self.exposure_time,
-                                        low_time = 1.0/self.fps - self.exposure_time,
-                                        cycles = cycles)
+            self.counter_fn.preparePulseOutput(high_time = self.exposure_time,
+                                               low_time = 1.0/self.fps - self.exposure_time,
+                                               cycles = cycles,
+                                               commit = commit)
         else:
-            self.counter_fn.pwmOutput(duty_cycle = 0.5, cycles = cycles)
+            self.counter_fn.preparePwmOutput(duty_cycle = 0.5,
+                                             cycles = cycles,
+                                             commit = commit)
+        self.prepared = True
+
+    def startCounter(self):
+        self.n_pulses = 0
+        prearmed = self.prepared
+        if not self.prepared:
+            self.prepareCounter()
+        self.counter_fn.startOutput()
+        self.prepared = False
 
         if self.start_timer is not None:
             self.start_timer.start()
         self.running = True
+        print(">> " + self.name + " counter started " + timestamp() + (" (pre-armed)" if prearmed else ""))
 
     def stopCounter(self):
         if self.start_timer is not None:
             self.start_timer.stop()
         self.counter_fn.stopOutput()
         self.film_length = None
+        self.prepared = False
         self.running = False
+
+
+def timestamp():
+    return datetime.datetime.now().strftime("%H:%M:%S.%f")[:-3]
     
 
 class HardwareTiming(halModule.HalModule):
@@ -186,6 +211,14 @@ class HardwareTiming(halModule.HalModule):
         # If 'exposure_time' is specified then the counter high time is the
         # exposure time, otherwise the counter has a 50% duty cycle.
         self.use_exposure_time = self.configuration.has("exposure_time")
+
+        # If True the counter task is created and committed when the film is
+        # being set up, so that it starts within a millisecond or so of the
+        # 'start camera' message, instead of tens of milliseconds later. This
+        # mimics a master camera time base, which fires its first trigger
+        # almost immediately, and is useful for testing whether the slave
+        # cameras are ready in time.
+        self.prearm_counter = self.configuration.get("prearm_counter", False)
 
         self.parameters = params.StormXMLObject()
 
@@ -289,8 +322,11 @@ class HardwareTiming(halModule.HalModule):
             #
             elif message.sourceIs("timing"):
                 timing_fn = message.getData()["properties"]["functionality"]
-                if (timing_fn.getTimeBase() == self.module_name) and self.film_settings.isFixedLength():
-                    self.hardware_timing_functionality.setFilmLength(self.film_settings.getFilmLength())
+                if (timing_fn.getTimeBase() == self.module_name):
+                    if self.film_settings.isFixedLength():
+                        self.hardware_timing_functionality.setFilmLength(self.film_settings.getFilmLength())
+                    if self.prearm_counter:
+                        self.hardware_timing_functionality.prepareCounter(commit = True)
 
         elif message.isType("configure1"):
 

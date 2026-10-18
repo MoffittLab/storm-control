@@ -9,6 +9,7 @@ Note that "slave" cameras are assumed to always be hardware timed.
 Hazen 2/17
 """
 
+import datetime
 from PyQt5 import QtCore
 import time
 
@@ -344,6 +345,7 @@ class CameraControl(QtCore.QThread):
         while not self.thread_started:
             time.sleep(0.01)
 
+        print(">> " + self.camera_name + " started " + datetime.datetime.now().strftime("%H:%M:%S.%f")[:-3])
         self.camera_functionality.started.emit()
 
     def startFilm(self, film_settings, is_time_base, is_hardware_timed = False):

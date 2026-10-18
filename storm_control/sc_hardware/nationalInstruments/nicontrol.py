@@ -43,6 +43,13 @@ class NIDAQTask(PyDAQmx.Task):
         with getLock():
             super().ClearTask()
 
+    def commitTask(self):
+        """
+        Verify, reserve and commit the task so that startTask() is fast.
+        """
+        with getLock():
+            self.TaskControl(PyDAQmx.DAQmx_Val_Task_Commit)
+
     def startTask(self):
         with getLock():
             super().StartTask()
