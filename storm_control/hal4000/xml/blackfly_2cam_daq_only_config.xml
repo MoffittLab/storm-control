@@ -14,9 +14,24 @@
       Wiring (the device / line choices are placeholders, change as needed):
 
       - The counter output, /Dev1/ctr0 (/Dev1/PFI12 on X-series boards),
-        goes to every camera's 'trigger_source' line. The counter is high
-        for 'exposure_time' and low for the rest of each frame.
+        goes to every camera's opto-isolated input (Line0): DAQ CTR 0 OUT
+        to DSUB 3 (OPTOIN) and DAQ D GND to DSUB 5 (OPTOGND). The counter
+        is high for 'exposure_time' and low for the rest of each frame.
       - Nothing is connected to a counter start trigger.
+
+      Camera GPIO cable (Hirose 6-pin on the camera, DSUB-9 at the far end):
+
+        Hirose  Signal    Camera line  Wire   DSUB-9
+        1       24V       Line3/VAUX   green  1
+        2       OPTOIN    Line0        black  3
+        3       OUT       Line2        red    8
+        4       OPTOOUT   Line1        white  4
+        5       OPTOGND   -            blue   5
+        6       GND       -            brown  6
+        shell   SHIELD    -            -      9    (DSUB 2 and 7 unused)
+
+      Line0 on OPTOIN is confirmed on the rig. Check the other camera line
+      numbers against the camera's Technical Reference before using them.
 
       Before running, set each camera's 'camera_id' (serial number, as
       shown in SpinView) and check the DAQ device name in NI MAX.
@@ -109,8 +124,8 @@
 	    <AcquisitionFrameRateEnable type="boolean">False</AcquisitionFrameRateEnable>
 	  </presets>
 
-	  <!-- Camera input line for the trigger, 'Line3' is the default. -->
-	  <trigger_source type="string">Line3</trigger_source>
+	  <!-- Camera input line for the trigger, the opto-isolated input. -->
+	  <trigger_source type="string">Line0</trigger_source>
 
 	  <!--
 	      The trigger pulse width sets the exposure time. With
@@ -155,7 +170,7 @@
 	    <AcquisitionFrameRateEnable type="boolean">False</AcquisitionFrameRateEnable>
 	  </presets>
 
-	  <trigger_source type="string">Line3</trigger_source>
+	  <trigger_source type="string">Line0</trigger_source>
 	  <exposure_mode type="string">TriggerWidth</exposure_mode>
 	  <!-- <trigger_ready_line type="string">Line1</trigger_ready_line> -->
 

@@ -7,16 +7,34 @@
 
       Wiring (the line / PFI choices are placeholders, change as needed):
 
-      (1) Each camera's 'trigger_ready_line' outputs the camera's
-          FrameTriggerWait signal to the trigger ready (RP2040) board.
+      (1) Each camera's 'trigger_ready_line' (Line1, the opto-isolated
+          output) outputs the camera's FrameTriggerWait signal to the
+          trigger ready board: DSUB 4 (OPTOOUT) to the board input and
+          DSUB 5 (OPTOGND) to the board ground.
 
       (2) The board's 1 kHz output, which is gated on all the cameras
           being ready, goes to the counter start trigger, /Dev1/PFI0.
 
       (3) The counter output, /Dev1/ctr0 (/Dev1/PFI12 on X-series boards),
-          goes to every camera's 'trigger_source' line. The counter high
-          time is the exposure time. This is also the 'camera_fire_pin'
-          that clocks the illumination waveforms.
+          goes to every camera's 'trigger_source' line, the opto-isolated
+          input (Line0): DAQ CTR 0 OUT to DSUB 3 (OPTOIN) and DAQ D GND to
+          DSUB 5 (OPTOGND). The counter high time is the exposure time.
+          This is also the 'camera_fire_pin' that clocks the illumination
+          waveforms.
+
+      Camera GPIO cable (Hirose 6-pin on the camera, DSUB-9 at the far end):
+
+        Hirose  Signal    Camera line  Wire   DSUB-9
+        1       24V       Line3/VAUX   green  1
+        2       OPTOIN    Line0        black  3
+        3       OUT       Line2        red    8
+        4       OPTOOUT   Line1        white  4
+        5       OPTOGND   -            blue   5
+        6       GND       -            brown  6
+        shell   SHIELD    -            -      9    (DSUB 2 and 7 unused)
+
+      Line0 on OPTOIN is confirmed on the rig. Check the other camera line
+      numbers against the camera's Technical Reference before using them.
   -->
 
   <!-- The starting directory. -->
@@ -102,8 +120,8 @@
 	    <BlackLevelClampingEnable type="boolean">False</BlackLevelClampingEnable>
 	  </presets>
 
-	  <!-- Camera input line for the trigger, 'Line3' is the default. -->
-	  <trigger_source type="string">Line3</trigger_source>
+	  <!-- Camera input line for the trigger, the opto-isolated input. -->
+	  <trigger_source type="string">Line0</trigger_source>
 
 	  <!--
 	      'Timed' (camera sets the exposure time) or 'TriggerWidth'
@@ -154,7 +172,7 @@
 	    <BlackLevelClampingEnable type="boolean">False</BlackLevelClampingEnable>
 	  </presets>
 
-	  <trigger_source type="string">Line3</trigger_source>
+	  <trigger_source type="string">Line0</trigger_source>
 	  <exposure_mode type="string">TriggerWidth</exposure_mode>
 	  <trigger_ready_line type="string">Line1</trigger_ready_line>
 	  <trigger_ready_invert type="boolean">False</trigger_ready_invert>
