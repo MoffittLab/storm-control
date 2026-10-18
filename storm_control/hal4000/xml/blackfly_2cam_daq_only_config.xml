@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<config>
+
+  <!--
+      Two Blackfly cameras timed by the DAQ only, with no external start
+      trigger (no OCTOBRAIN). Use this to test DAQ-driven, exposure-width
+      triggering before adding the trigger ready start trigger.
+
+      When a film starts, HAL starts both cameras, then starts the DAQ
+      counter immediately. Because nothing waits for the cameras to be
+      ready, a camera may occasionally miss the first frame. That is the
+      problem OCTOBRAIN fixes; see blackfly_trigger_ready_config.xml.
+
+      Wiring (the device / line choices are placeholders, change as needed):
+
+      - The counter output, /Dev1/ctr0 (/Dev1/PFI12 on X-series boards),
+        goes to every camera's 'trigger_source' line. The counter is high
+        for 'exposure_time' and low for the rest of each frame.
+      - Nothing is connected to a counter start trigger.
+
+      Before running, set each camera's 'camera_id' (serial number, as
+      shown in SpinView) and check the DAQ device name in NI MAX.
+  -->
+
+  <!-- The starting directory. HAL writes logs to <directory>\logs. -->
+  <directory type="directory">C:\Data\</directory>
+
+  <!-- The setup name -->
+  <setup_name type="string">blackfly_2cam_daq_only</setup_name>
+
+  <!-- The ui type, this is 'classic' or 'detached' -->
+  <ui_type type="string">detached</ui_type>
+
+  <strict type="boolean">True</strict>
+
+  <modules>
+
+    <hal>
+      <class_name type="string">HalController</class_name>
+      <module_name type="string">storm_control.hal4000.hal4000</module_name>
+    </hal>
+
+    <display>
+      <class_name type="string">Display</class_name>
+      <module_name type="string">storm_control.hal4000.display.display</module_name>
+      <parameters>
+	<colortable type="string">ramp.ctbl</colortable>
+      </parameters>
+    </display>
+
+    <feeds>
+      <class_name type="string">Feeds</class_name>
+      <module_name type="string">storm_control.hal4000.feeds.feeds</module_name>
+    </feeds>
+
+    <film>
+      <class_name type="string">Film</class_name>
+      <module_name type="string">storm_control.hal4000.film.film</module_name>
+      <parameters>
+	<extension desc="Movie file name extension" type="string" values=",Red,Green,Blue"></extension>
+      </parameters>
+    </film>
+
+    <mosaic>
+      <class_name type="string">Mosaic</class_name>
+      <module_name type="string">storm_control.hal4000.mosaic.mosaic</module_name>
+      <parameters>
+	<flip_horizontal desc="Flip image horizontal (mosaic)" type="boolean">False</flip_horizontal>
+	<flip_vertical desc="Flip image vertical (mosaic)" type="boolean">False</flip_vertical>
+	<transpose desc="Transpose image (mosaic)" type="boolean">False</transpose>
+	<objective desc="Current objective" type="string" values="obj1">obj1</objective>
+	<obj1 desc="Objective 1" type="custom">60x,0.120,0.0,0.0</obj1>
+      </parameters>
+    </mosaic>
+
+    <settings>
+      <class_name type="string">Settings</class_name>
+      <module_name type="string">storm_control.hal4000.settings.settings</module_name>
+    </settings>
+
+    <!-- The time base is the hardware timing module (the DAQ counter). -->
+    <timing>
+      <class_name type="string">Timing</class_name>
+      <module_name type="string">storm_control.hal4000.timing.timing</module_name>
+      <parameters>
+	<time_base type="string">hardware_timing</time_base>
+      </parameters>
+    </timing>
+
+    <!-- All the cameras must be slaves in a hardware timed setup. -->
+    <camera1>
+      <class_name type="string">Camera</class_name>
+      <module_name type="string">storm_control.hal4000.camera.camera</module_name>
+      <camera>
+	<master type="boolean">False</master>
+	<class_name type="string">PointGreyCameraControl</class_name>
+	<module_name type="string">storm_control.hal4000.camera.pointgreyCameraControl</module_name>
+	<parameters>
+	  <!-- Camera serial number, as shown in SpinView. -->
+	  <camera_id type="string">00000001</camera_id>
+
+	  <presets>
+	    <PixelFormat type="string">Mono16</PixelFormat>
+	    <ExposureAuto type="string">Off</ExposureAuto>
+	    <GainAuto type="string">Off</GainAuto>
+	    <BlackLevelClampingEnable type="boolean">False</BlackLevelClampingEnable>
+
+	    <!-- Don't let the camera's own frame rate limit the trigger rate. -->
+	    <AcquisitionFrameRateEnable type="boolean">False</AcquisitionFrameRateEnable>
+	  </presets>
+
+	  <!-- Camera input line for the trigger, 'Line3' is the default. -->
+	  <trigger_source type="string">Line3</trigger_source>
+
+	  <!--
+	      The trigger pulse width sets the exposure time. With
+	      'TriggerWidth', 'trigger_activation' defaults to 'LevelHigh'.
+	  -->
+	  <exposure_mode type="string">TriggerWidth</exposure_mode>
+
+	  <!--
+	      Optional: output the camera's trigger ready (FrameTriggerWait)
+	      signal on this line, e.g. to look at it on a scope. Not needed
+	      without OCTOBRAIN.
+	  -->
+	  <!-- <trigger_ready_line type="string">Line1</trigger_ready_line> -->
+
+	  <default_max type="int">200</default_max>
+	  <default_min type="int">30</default_min>
+	  <flip_horizontal type="boolean">False</flip_horizontal>
+	  <flip_vertical type="boolean">False</flip_vertical>
+	  <transpose type="boolean">False</transpose>
+	  <extension type="string">c1</extension>
+	  <saved type="boolean">True</saved>
+	</parameters>
+      </camera>
+    </camera1>
+
+    <camera2>
+      <class_name type="string">Camera</class_name>
+      <module_name type="string">storm_control.hal4000.camera.camera</module_name>
+      <camera>
+	<master type="boolean">False</master>
+	<class_name type="string">PointGreyCameraControl</class_name>
+	<module_name type="string">storm_control.hal4000.camera.pointgreyCameraControl</module_name>
+	<parameters>
+	  <!-- Camera serial number, as shown in SpinView. -->
+	  <camera_id type="string">00000002</camera_id>
+
+	  <presets>
+	    <PixelFormat type="string">Mono16</PixelFormat>
+	    <ExposureAuto type="string">Off</ExposureAuto>
+	    <GainAuto type="string">Off</GainAuto>
+	    <BlackLevelClampingEnable type="boolean">False</BlackLevelClampingEnable>
+	    <AcquisitionFrameRateEnable type="boolean">False</AcquisitionFrameRateEnable>
+	  </presets>
+
+	  <trigger_source type="string">Line3</trigger_source>
+	  <exposure_mode type="string">TriggerWidth</exposure_mode>
+	  <!-- <trigger_ready_line type="string">Line1</trigger_ready_line> -->
+
+	  <default_max type="int">200</default_max>
+	  <default_min type="int">30</default_min>
+	  <flip_horizontal type="boolean">False</flip_horizontal>
+	  <flip_vertical type="boolean">False</flip_vertical>
+	  <transpose type="boolean">False</transpose>
+	  <extension type="string">c2</extension>
+	  <saved type="boolean">True</saved>
+	</parameters>
+      </camera>
+    </camera2>
+
+    <daq>
+      <module_name type="string">storm_control.sc_hardware.nationalInstruments.nidaqModule</module_name>
+      <class_name type="string">NidaqModule</class_name>
+
+      <configuration>
+	<!--
+	    Only used for illumination waveforms, which this setup does not
+	    have yet. The camera fire pin is the counter output.
+	-->
+	<timing>
+	  <camera_fire_pin type="string">/Dev1/PFI12</camera_fire_pin>
+	  <counter type="string">/Dev1/ctr1</counter>
+	  <counter_out type="string">/Dev1/PFI13</counter_out>
+	</timing>
+
+	<!--
+	    This counter provides the hardware time base for the cameras.
+	    There is no 'trigger_source', so it starts as soon as HAL starts
+	    filming (or live mode).
+	-->
+	<counter>
+	  <ctc_task>
+	    <source type="string">/Dev1/ctr0</source>
+	    <frequency type="float">10</frequency>
+	  </ctc_task>
+	</counter>
+      </configuration>
+    </daq>
+
+    <!--
+	Hardware camera timing. The counter high time is 'exposure_time' and
+	the low time is 1/fps - exposure_time, which must be at least
+	'min_low_time' so that the cameras can re-arm. 'start_timeout' is not
+	needed because the counter has no start trigger.
+    -->
+    <hardware_timing>
+      <class_name type="string">HardwareTiming</class_name>
+      <module_name type="string">storm_control.hal4000.timing.hardwareTiming</module_name>
+      <configuration>
+	<counter_fn_name>daq.counter.ctc_task</counter_fn_name>
+	<fps type="float">10.0</fps>
+	<fps_min type="float">0.1</fps_min>
+	<fps_max type="float">200.0</fps_max>
+	<exposure_time type="float">0.05</exposure_time>
+	<exposure_time_min type="float">1.0e-5</exposure_time_min>
+	<exposure_time_max type="float">10.0</exposure_time_max>
+	<min_low_time type="float">0.001</min_low_time>
+      </configuration>
+    </hardware_timing>
+
+  </modules>
+</config>
