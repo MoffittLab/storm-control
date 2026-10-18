@@ -128,8 +128,8 @@ class EditorTreeViewDelegate(QtWidgets.QStyledItemDelegate):
 
             # Render parameter description.
             if (overall_width > 400):
-                a_rect = QtCore.QRect(int(option.rect.topLeft()),
-                                      int(option.rect.bottomRight()))
+                a_rect = QtCore.QRect(option.rect.topLeft(),
+                                      option.rect.bottomRight())
                 a_rect.setLeft(option.rect.left() + self.name_width + self.margin)
                 a_rect.setWidth(overall_width - (self.name_width + self.widget_width + 3*self.margin))
 
