@@ -1,2 +1,6 @@
 # Never use another README.md
 README.md merge=ours
+
+# Shell scripts must keep LF line endings, even on Windows checkouts,
+# otherwise Git Bash fails with "command not found" errors.
+*.sh text eol=lf
