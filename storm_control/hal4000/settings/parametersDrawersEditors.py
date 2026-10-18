@@ -149,6 +149,8 @@ class EditorRangeFloat(QtWidgets.QDoubleSpinBox, EditorMixin):
         super().setParameter(parameter)
         self.valueChanged.disconnect(self.handleValueChanged)
         self.setDecimals(self.parameter.getDecimals())
+        if self.parameter.getStep() is not None:
+            self.setSingleStep(self.parameter.getStep())
         self.setMaximum(self.parameter.getMaximum())
         self.setMinimum(self.parameter.getMinimum())
         self.setValue(self.parameter.getv())

@@ -366,14 +366,21 @@ class ParameterRange(Parameter):
 class ParameterRangeFloat(ParameterRange):
     """
     Float range parameter.
+
+    decimals is the number of decimals shown by the editor, step is the
+    editor's step size (None for the editor's default).
     """
-    def __init__(self, decimals = 2, **kwds):
+    def __init__(self, decimals = 2, step = None, **kwds):
         super().__init__(**kwds)
         self.decimals = decimals
         self.ptype = "float"
+        self.step = step
 
     def getDecimals(self):
         return self.decimals
+
+    def getStep(self):
+        return self.step
     
     def toType(self, value):
         return float(value)

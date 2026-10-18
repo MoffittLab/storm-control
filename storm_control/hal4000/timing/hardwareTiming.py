@@ -200,25 +200,43 @@ class HardwareTiming(halModule.HalModule):
                                                        max_value = self.configuration.get("fps_max", 10000.0)))
 
         if self.use_exposure_time:
+            self.exposure_time_max = self.configuration.get("exposure_time_max", 10.0)
+            self.exposure_time_min = self.configuration.get("exposure_time_min", 1.0e-5)
             self.parameters.add(params.ParameterRangeFloat(description = "Exposure time (seconds)",
                                                            name = "exposure_time",
                                                            value = self.configuration.get("exposure_time"),
-                                                           min_value = self.configuration.get("exposure_time_min", 1.0e-5),
-                                                           max_value = self.configuration.get("exposure_time_max", 10.0)))
-            self.checkTiming(self.parameters)
+                                                           min_value = self.exposure_time_min,
+                                                           max_value = self.exposure_time_max,
+                                                           decimals = 5,
+                                                           step = 0.001))
+        self.setTiming(self.parameters.get("fps"),
+                       self.parameters.get("exposure_time") if self.use_exposure_time else None)
 
-    def checkTiming(self, parameters):
+    def maxExposureTime(self, fps):
         """
-        Check that the exposure time is compatible with the frame rate.
+        The longest exposure time that leaves the counter low for at least
+        min_low_time each frame at this frame rate.
         """
+        max_exposure = min(1.0/fps - self.min_low_time, self.exposure_time_max)
+        return max(max_exposure, self.exposure_time_min)
+
+    def setTiming(self, fps, exposure_time):
+        """
+        Set the frame rate and exposure time. The frame rate takes priority,
+        the exposure time is clipped so that it fits in a frame. The exposure
+        time's maximum is also set to this limit so that the parameters editor
+        won't accept a longer one.
+        """
+        self.parameters.setv("fps", fps)
         if self.use_exposure_time:
-            fps = parameters.get("fps")
-            exposure_time = parameters.get("exposure_time")
-            low_time = 1.0/fps - exposure_time
-            if (low_time < self.min_low_time):
-                msg = "Exposure time {0:.6f}s is too long for {1:.3f} FPS, ".format(exposure_time, fps)
-                msg += "the maximum is {0:.6f}s.".format(1.0/fps - self.min_low_time)
-                raise halExceptions.HalException(msg)
+            max_exposure = self.maxExposureTime(self.parameters.get("fps"))
+            if (exposure_time > max_exposure):
+                print(">> Warning exposure time {0:.5f}s clipped to {1:.5f}s for {2:.3f} FPS.".format(exposure_time,
+                                                                                                        max_exposure,
+                                                                                                        self.parameters.get("fps")))
+            p = self.parameters.getp("exposure_time")
+            p.setMaximum(max_exposure)
+            p.setv(exposure_time)
 
     def handleResponse(self, message, response):
         if message.isType("get functionality"):
@@ -263,9 +281,14 @@ class HardwareTiming(halModule.HalModule):
 
         elif message.isType("configure1"):
 
-            # Broadcast initial parameters.
+            # Broadcast initial parameters. These become the defaults that
+            # parameters files are loaded on top of, so they keep the full
+            # exposure time range rather than the limit for the current fps.
+            initial = self.parameters.copy()
+            if self.use_exposure_time:
+                initial.getp("exposure_time").setMaximum(self.exposure_time_max)
             self.sendMessage(halMessage.HalMessage(m_type = "initial parameters",
-                                                   data = {"parameters" : self.parameters}))
+                                                   data = {"parameters" : initial}))
 
             # Send 'configuration' message with information about this hardware timing
             # module. This module is always a master, but is not a camera.
@@ -300,18 +323,15 @@ class HardwareTiming(halModule.HalModule):
             message.addResponse(halMessage.HalMessageResponse(source = self.module_name,
                                                               data = {"old parameters" : self.parameters.copy()}))
             p = message.getData()["parameters"].get(self.module_name)
-            new_p = self.parameters.copy()
-            new_p.setv("fps", p.get("fps"))
+            exposure_time = None
             if self.use_exposure_time:
                 # Older parameters files won't have an exposure time.
-                new_p.setv("exposure_time", p.get("exposure_time", self.parameters.get("exposure_time")))
-            self.checkTiming(new_p)
+                exposure_time = p.get("exposure_time", self.parameters.get("exposure_time"))
+            self.setTiming(p.get("fps"), exposure_time)
 
-            self.parameters.setv("fps", new_p.get("fps"))
-            self.hardware_timing_functionality.setFPS(new_p.get("fps"))
+            self.hardware_timing_functionality.setFPS(self.parameters.get("fps"))
             if self.use_exposure_time:
-                self.parameters.setv("exposure_time", new_p.get("exposure_time"))
-                self.hardware_timing_functionality.setExposureTime(new_p.get("exposure_time"))
+                self.hardware_timing_functionality.setExposureTime(self.parameters.get("exposure_time"))
             message.addResponse(halMessage.HalMessageResponse(source = self.module_name,
                                                               data = {"new parameters" : self.parameters}))
 
