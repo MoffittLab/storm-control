@@ -251,11 +251,24 @@ class HardwareTiming(halModule.HalModule):
                 if self.use_exposure_time:
                     self.hardware_timing_functionality.setExposureTime(self.parameters.get("exposure_time"))
 
-                self.sendMessage(halMessage.HalMessage(m_type = "configuration",
-                                                       data = {"properties" : {}}))
+                self.sendTimingConfiguration()
 
     def handleStartTimedOut(self, msg):
         halMessageBox.halMessageBoxInfo(msg, is_error = True)
+
+    def sendTimingConfiguration(self):
+        """
+        Tell other modules, such as the camera parameters viewers, the
+        current frame rate and exposure time. The exposure time is None
+        if the counter has a 50% duty cycle.
+        """
+        exposure_time = None
+        if self.use_exposure_time:
+            exposure_time = self.parameters.get("exposure_time")
+        timing = {"fps" : self.parameters.get("fps"),
+                  "exposure_time" : exposure_time}
+        self.sendMessage(halMessage.HalMessage(m_type = "configuration",
+                                               data = {"properties" : {"hardware timing" : timing}}))
 
     def processMessage(self, message):
 
@@ -368,6 +381,7 @@ class HardwareTiming(halModule.HalModule):
             # during a film.
             if self.hardware_timing_functionality is not None:
                 self.hardware_timing_functionality.restartCounter()
+            self.sendTimingConfiguration()
                 
                 
                 

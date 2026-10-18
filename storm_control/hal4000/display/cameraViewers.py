@@ -73,6 +73,10 @@ class CameraParamsMixin(object):
     def setFeedNames(self, feed_names):
         self.frame_viewer.setFeedNames(feed_names)
 
+    def setHardwareTiming(self, hardware_timing):
+        if self.params_viewer is not None:
+            self.params_viewer.setHardwareTiming(hardware_timing)
+
     def setStageFunctionality(self, stage_functionality):
         self.frame_viewer.setStageFunctionality(stage_functionality)
 

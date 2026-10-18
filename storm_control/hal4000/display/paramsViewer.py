@@ -26,6 +26,7 @@ class ParamsViewer(QtWidgets.QGroupBox):
     def __init__(self, viewer_name = "", viewer_ui = None, **kwds):
         super().__init__(**kwds)
         self.cam_fn = None
+        self.hardware_timing = None
         self.temperature = 50
         self.viewer_name = viewer_name
 
@@ -114,11 +115,7 @@ class ParamsViewer(QtWidgets.QGroupBox):
             self.ui.EMCCDLabel.setText("EMCCD Gain: {0:d}".format(gainp.getv()))
             self.ui.EMCCDSlider.valueChanged.connect(self.handleGainChange)
 
-        if self.cam_fn.isMaster():
-            self.ui.FPSText.setText("{0:.4f}".format(self.cam_fn.getParameter("fps")))
-        else:
-            self.ui.FPSText.setText("External")
-        self.ui.exposureTimeText.setText("{0:.4f}".format(self.cam_fn.getParameter("exposure_time")))
+        self.updateTiming()
         
         if self.cam_fn.hasParameter("preampgain"):
             self.ui.preampGainText.setText("{0:.1f}".format(self.cam_fn.getParameter("preampgain")))
@@ -135,11 +132,47 @@ class ParamsViewer(QtWidgets.QGroupBox):
         self.ui.pictureStartText.setText(str(self.cam_fn.getParameter("x_start")) + ", " +
                                          str(self.cam_fn.getParameter("y_start")))
 
+    def setHardwareTiming(self, hardware_timing):
+        """
+        hardware_timing is a dictionary with the 'fps' and 'exposure_time'
+        of the hardware timing module. 'exposure_time' is None if the
+        hardware timing does not set the exposure time.
+        """
+        self.hardware_timing = hardware_timing
+        if self.cam_fn is not None:
+            self.updateTiming()
+
     def startFilm(self):
         self.ui.EMCCDSlider.setEnabled(False)
 
     def stopFilm(self):
         self.ui.EMCCDSlider.setEnabled(True)
+
+    def updateTiming(self):
+        """
+        Show the frame rate and exposure time. For slave cameras in a hardware
+        timed setup these come from the hardware timing module, marked (HW).
+        """
+        hw = self.hardware_timing
+        hw_tooltip = "Set by the hardware timing module"
+        is_hw_slave = (hw is not None) and (not self.cam_fn.isMaster())
+
+        if self.cam_fn.isMaster():
+            self.ui.FPSText.setText("{0:.4f}".format(self.cam_fn.getParameter("fps")))
+            self.ui.FPSText.setToolTip("")
+        elif is_hw_slave:
+            self.ui.FPSText.setText("{0:.4f} (HW)".format(hw["fps"]))
+            self.ui.FPSText.setToolTip(hw_tooltip)
+        else:
+            self.ui.FPSText.setText("External")
+            self.ui.FPSText.setToolTip("")
+
+        if is_hw_slave and (hw["exposure_time"] is not None):
+            self.ui.exposureTimeText.setText("{0:.5f} (HW)".format(hw["exposure_time"]))
+            self.ui.exposureTimeText.setToolTip(hw_tooltip)
+        else:
+            self.ui.exposureTimeText.setText("{0:.4f}".format(self.cam_fn.getParameter("exposure_time")))
+            self.ui.exposureTimeText.setToolTip("")
             
 
 #

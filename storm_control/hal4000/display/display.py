@@ -25,6 +25,7 @@ class Display(halModule.HalModule):
     def __init__(self, module_params = None, qt_settings = None, **kwds):
         super().__init__(**kwds)
 
+        self.hardware_timing = None
         self.have_stage = False
         self.is_classic = (module_params.get("ui_type") == "classic")
         self.parameters = module_params.get("parameters")
@@ -118,6 +119,12 @@ class Display(halModule.HalModule):
                 shutters_info = message.getData()["properties"]["shutters info"]
                 for viewer in self.viewers:
                     viewer.setSyncMax(shutters_info.getFrames())
+
+            # Hardware timing module frame rate and exposure time, if any.
+            elif ("hardware timing" in message.getData()["properties"]):
+                self.hardware_timing = message.getData()["properties"]["hardware timing"]
+                for viewer in self.viewers:
+                    viewer.setHardwareTiming(self.hardware_timing)
 
             elif message.sourceIs("stage"):
                 stage_fn_name = message.getData()["properties"]["stage functionality name"]
@@ -213,6 +220,8 @@ class Display(halModule.HalModule):
             viewer.guiMessage.connect(self.handleGuiMessage)
             if self.stage_functionality is not None:
                 viewer.setStageFunctionality(self.stage_functionality)
+            if self.hardware_timing is not None:
+                viewer.setHardwareTiming(self.hardware_timing)
             viewer.showViewer(self.show_gui)
             self.viewers.append(viewer)
 
