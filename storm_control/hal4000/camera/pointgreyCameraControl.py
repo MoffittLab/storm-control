@@ -132,6 +132,14 @@ class PointGreyCameraControl(cameraControl.HWCameraControl):
                 if self.camera.hasProperty("LineInverter"):
                     self.camera.setProperty("LineInverter", config.get("trigger_ready_invert", False))
 
+            # Report what the camera actually has, as setProperty() silently
+            # skips properties that are not writable.
+            print("Trigger settings of spinnaker camera: " + str(config.get("camera_id")))
+            for p_name in ["TriggerSelector", "TriggerMode", "TriggerSource", "TriggerActivation",
+                           "TriggerOverlap", "ExposureMode"]:
+                if self.camera.hasProperty(p_name):
+                    print("   " + p_name + ": " + str(self.camera.getProperty(p_name).getValue()))
+
         #
         # Dictionary of Point Grey specific camera parameters.
         #
