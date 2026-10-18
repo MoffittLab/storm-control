@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+    First frame test: take 100 short movies in a row with HAL's current
+    (default) parameters, no stage movement, to look for movies in which a
+    camera drops the first frame.
+
+    - Each movie is 'length' frames long. Short movies are enough, as only
+      the start of each movie matters.
+    - No <parameters> tag, so HAL uses whatever parameters are currently
+      selected.
+    - The movies are named first_frame_000 ... first_frame_099 and are
+      saved in HAL's current directory.
+    - The number of movies is the number of <value> entries in the
+      'Movie Loop' loop variable below.
+
+    In Dave choose XML > Generate XML and select this file. Dave expands it
+    into a sequence of 100 movies and loads it, then press Start.
+-->
+<recipe>
+
+<command_sequence>
+  <loop name = "Movie Loop" increment = "name">
+    <movie>
+      <name increment = "Yes">first_frame</name>
+      <length>10</length>
+      <variable_entry name = "Movie Loop" />
+    </movie>
+  </loop>
+</command_sequence>
+
+<!-- One <value> per movie. <none/> means no stage movement. -->
+<loop_variable name = "Movie Loop">
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+   <value><none/></value>
+</loop_variable>
+
+</recipe>
