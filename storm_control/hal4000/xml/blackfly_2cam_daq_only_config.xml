@@ -140,6 +140,13 @@
 	  -->
 	  <!-- <trigger_ready_line type="string">Line1</trigger_ready_line> -->
 
+	  <!--
+	      When a film stops, keep collecting frames the camera has exposed
+	      but not yet delivered until no frame has arrived for this long
+	      (seconds). Default 0.5.
+	  -->
+	  <!-- <stop_timeout type="float">0.5</stop_timeout> -->
+
 	  <default_max type="int">200</default_max>
 	  <default_min type="int">30</default_min>
 	  <flip_horizontal type="boolean">False</flip_horizontal>
@@ -173,6 +180,13 @@
 	  <trigger_source type="string">Line0</trigger_source>
 	  <exposure_mode type="string">TriggerWidth</exposure_mode>
 	  <!-- <trigger_ready_line type="string">Line1</trigger_ready_line> -->
+
+	  <!--
+	      When a film stops, keep collecting frames the camera has exposed
+	      but not yet delivered until no frame has arrived for this long
+	      (seconds). Default 0.5.
+	  -->
+	  <!-- <stop_timeout type="float">0.5</stop_timeout> -->
 
 	  <default_max type="int">200</default_max>
 	  <default_min type="int">30</default_min>

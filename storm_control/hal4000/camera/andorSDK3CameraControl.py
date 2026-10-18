@@ -233,8 +233,8 @@ class AndorSDK3CameraControl(cameraControl.HWCameraControl):
 
             self.camera_functionality.parametersChanged.emit()
 
-    def startFilm(self, film_settings, is_time_base):
-        super().startFilm(film_settings, is_time_base)
+    def startFilm(self, film_settings, is_time_base, is_hardware_timed = False):
+        super().startFilm(film_settings, is_time_base, is_hardware_timed)
         if self.camera_working and self.film_length is not None:
             self.camera.setProperty("CycleMode", self.andor_props["CycleMode"], "Fixed")
             self.camera.setProperty("FrameCount", self.andor_props["FrameCount"], self.film_length)

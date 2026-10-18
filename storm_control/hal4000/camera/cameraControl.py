@@ -46,6 +46,15 @@ class CameraControl(QtCore.QThread):
 
         # The length of a fixed length film.
         self.film_length = None
+
+        # True while filming, from startFilm() to stopFilm().
+        self.filming = False
+
+        # When stopping during a film, keep collecting frames until the film
+        # length is reached, or no frame has arrived for this long (seconds).
+        # This is so that frames the camera has exposed but not yet delivered
+        # (readout, transfer) are not lost.
+        self.stop_timeout = config.get("stop_timeout", 0.5)
         
         # The current frame number, this gets reset by startCamera().
         self.frame_number = 0
@@ -337,12 +346,14 @@ class CameraControl(QtCore.QThread):
 
         self.camera_functionality.started.emit()
 
-    def startFilm(self, film_settings, is_time_base):
+    def startFilm(self, film_settings, is_time_base, is_hardware_timed = False):
         """
-        If this is a fixed length film and this camera is the time
-        base for the film, then set the film_length attribute.
+        If this is a fixed length film and this camera is the time base for
+        the film, or the film is hardware timed (i.e. the time base is a DAQ
+        counter that triggers this camera), then set the film_length attribute.
         """
-        if film_settings.isFixedLength() and is_time_base:
+        self.filming = True
+        if film_settings.isFixedLength() and (is_time_base or is_hardware_timed):
             self.film_length = film_settings.getFilmLength()
 
     def stopCamera(self):
@@ -353,6 +364,7 @@ class CameraControl(QtCore.QThread):
             self.wait()
 
     def stopFilm(self):
+        self.filming = False
         self.film_length = None
 
     def toggleShutter(self):
@@ -378,6 +390,41 @@ class HWCameraControl(CameraControl):
         super().cleanUp()
         self.camera.shutdown()
 
+    def collectFrames(self):
+        """
+        Get any new frames from the camera, create frame objects and emit
+        them. Returns the number of frames collected.
+        """
+        self.camera_mutex.lock()
+        [frames, frame_size] = self.camera.getFrames()
+        self.camera_mutex.unlock()
+
+        if (len(frames) == 0):
+            return 0
+
+        frame_data = []
+        for cam_frame in frames:
+            aframe = frame.Frame(cam_frame.getData(),
+                                 self.frame_number,
+                                 frame_size[0],
+                                 frame_size[1],
+                                 self.camera_name)
+            frame_data.append(aframe)
+            self.frame_number += 1
+
+            if self.filmComplete():
+                self.running = False
+
+        # Emit new data signal.
+        self.newData.emit(frame_data)
+        return len(frames)
+
+    def filmComplete(self):
+        """
+        True if this is a fixed length film and we have all the frames.
+        """
+        return (self.film_length is not None) and (self.frame_number >= self.film_length)
+
     def run(self):
         #
         # Note: The order is important here, we need to start the camera and
@@ -388,33 +435,28 @@ class HWCameraControl(CameraControl):
         self.running = True
         self.thread_started = True
         while(self.running):
-
-            # Get data from camera and create frame objects.
-            self.camera_mutex.lock()
-            [frames, frame_size] = self.camera.getFrames()
-            self.camera_mutex.unlock()
-
-            # Check if we got new frame data.
-            if (len(frames) > 0):
-
-                # Create frame objects.
-                frame_data = []
-                for cam_frame in frames:
-                    aframe = frame.Frame(cam_frame.getData(),
-                                         self.frame_number,
-                                         frame_size[0],
-                                         frame_size[1],
-                                         self.camera_name)
-                    frame_data.append(aframe)
-                    self.frame_number += 1
-
-                    if self.film_length is not None:                    
-                        if (self.frame_number == self.film_length):
-                            self.running = False
-                            
-                # Emit new data signal.
-                self.newData.emit(frame_data)
+            self.collectFrames()
             self.msleep(5)
+
+        #
+        # If we were stopped during a film, keep collecting frames that the
+        # camera has exposed but not yet delivered. Stop when we have all the
+        # frames of a fixed length film, or when no frame has arrived for
+        # stop_timeout seconds (the triggers have stopped by now, so nothing
+        # new will be exposed).
+        #
+        if self.filming and not self.filmComplete():
+            deadline = time.time() + self.stop_timeout
+            while (time.time() < deadline):
+                if (self.collectFrames() > 0):
+                    if self.filmComplete():
+                        break
+                    deadline = time.time() + self.stop_timeout
+                self.msleep(5)
+
+            if (self.film_length is not None) and not self.filmComplete():
+                print(">> Warning " + self.camera_name + " stopped with " + str(self.frame_number) +
+                      " of " + str(self.film_length) + " frames.")
 
         self.camera.stopAcquisition()
             

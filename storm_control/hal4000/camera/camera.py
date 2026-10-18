@@ -41,6 +41,10 @@ class Camera(halModule.HalModule):
         self.film_settings = None
         self.is_master = None
 
+        # Names of the hardware timing modules (non-camera time bases) in
+        # this setup, from their 'configuration' messages.
+        self.hardware_timing_modules = []
+
         camera_params = module_params.get("camera")
         a_module = importlib.import_module(camera_params.get("module_name"))
         a_class = getattr(a_module, camera_params.get("class_name"))
@@ -59,10 +63,22 @@ class Camera(halModule.HalModule):
         if message.isType("configuration"):
             if message.sourceIs("timing"):
                 timing_fn = message.getData()["properties"]["functionality"]
-                is_time_base = (timing_fn.getTimeBase() == self.module_name)
+                time_base = timing_fn.getTimeBase()
+                is_time_base = (time_base == self.module_name)
+
+                # In a hardware timed film the slave cameras are triggered by
+                # the time base, so they also know how many frames to expect.
+                is_hardware_timed = (time_base in self.hardware_timing_modules) and not self.is_master
                 halModule.runWorkerTask(self,
-                                        message, 
-                                        lambda : self.startFilm(is_time_base))
+                                        message,
+                                        lambda : self.startFilm(is_time_base, is_hardware_timed))
+
+            # Look for hardware timing modules. Their 'configuration' message
+            # is like a camera's, but with 'is camera' False.
+            elif ("is camera" in message.getData()["properties"]):
+                props = message.getData()["properties"]
+                if not props["is camera"]:
+                    self.hardware_timing_modules.append(props["module name"])
 
         elif message.isType("configure1"):
             # Broadcast initial parameters.
@@ -127,8 +143,8 @@ class Camera(halModule.HalModule):
     def startCamera(self):
         self.camera_control.startCamera()
 
-    def startFilm(self, is_time_base):
-        self.camera_control.startFilm(self.film_settings, is_time_base)
+    def startFilm(self, is_time_base, is_hardware_timed = False):
+        self.camera_control.startFilm(self.film_settings, is_time_base, is_hardware_timed)
 
     def stopCamera(self):
         self.camera_control.stopCamera()

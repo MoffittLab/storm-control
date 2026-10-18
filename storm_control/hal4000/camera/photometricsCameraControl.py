@@ -172,8 +172,8 @@ class PhotometricsCameraControl(cameraControl.HWCameraControl):
 
     # FIXME: For short films we should configure for fixed length acquisition.
     #
-    def startFilm(self, film_settings, is_time_base):
-        super().startFilm(film_settings, is_time_base)
+    def startFilm(self, film_settings, is_time_base, is_hardware_timed = False):
+        super().startFilm(film_settings, is_time_base, is_hardware_timed)
 
     def stopFilm(self):
         super().stopFilm()                                                    

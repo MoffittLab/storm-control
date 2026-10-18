@@ -194,8 +194,8 @@ class HamamatsuCameraControl(cameraControl.HWCameraControl):
                 
             self.camera_functionality.parametersChanged.emit()
 
-    def startFilm(self, film_settings, is_time_base):
-        super().startFilm(film_settings, is_time_base)
+    def startFilm(self, film_settings, is_time_base, is_hardware_timed = False):
+        super().startFilm(film_settings, is_time_base, is_hardware_timed)
         if self.camera_working:
             if self.film_length is not None:
                 if (self.film_length > 1000):
