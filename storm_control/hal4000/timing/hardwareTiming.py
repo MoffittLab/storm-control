@@ -57,6 +57,7 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
         self.fps = None
         self.name = name
         self.n_pulses = 0
+        self.running = False
 
         self.counter_fn.setDoneFn(self.handleStopped)
         self.counter_fn.setSignalFn(self.handleNewFrame)
@@ -109,6 +110,15 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
     def handleStopped(self):
         self.stopped.emit()
 
+    def restartCounter(self):
+        """
+        Restart the counter so that new fps / exposure time settings take
+        effect, if it is running (i.e. live mode).
+        """
+        if self.running:
+            self.stopCounter()
+            self.startCounter()
+
     def setExposureTime(self, exposure_time):
         """
         If this is not None the counter high time is set to the exposure
@@ -139,12 +149,14 @@ class HardwareTimingFunctionality(halFunctionality.HalFunctionality):
 
         if self.start_timer is not None:
             self.start_timer.start()
+        self.running = True
 
     def stopCounter(self):
         if self.start_timer is not None:
             self.start_timer.stop()
         self.counter_fn.stopOutput()
         self.film_length = None
+        self.running = False
     
 
 class HardwareTiming(halModule.HalModule):
@@ -328,6 +340,14 @@ class HardwareTiming(halModule.HalModule):
         elif message.isType("stop film"):
             message.addResponse(halMessage.HalMessageResponse(source = self.module_name, 
                                                               data = {"parameters" : self.parameters.copy()}))
+
+        elif message.isType("updated parameters"):
+            # The counter only reads fps / exposure time when it starts. Films
+            # always start it, but in live mode it is already running, so
+            # restart it to apply the new settings. Parameters can't change
+            # during a film.
+            if self.hardware_timing_functionality is not None:
+                self.hardware_timing_functionality.restartCounter()
                 
                 
                 
