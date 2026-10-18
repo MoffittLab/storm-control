@@ -111,7 +111,7 @@
 	<class_name type="string">PointGreyCameraControl</class_name>
 	<module_name type="string">storm_control.hal4000.camera.pointgreyCameraControl</module_name>
 	<parameters>
-	  <camera_id type="string">00000001</camera_id>
+	  <camera_id type="string">20232538</camera_id>
 
 	  <presets>
 	    <PixelFormat type="string">Mono16</PixelFormat>
@@ -163,7 +163,7 @@
 	<class_name type="string">PointGreyCameraControl</class_name>
 	<module_name type="string">storm_control.hal4000.camera.pointgreyCameraControl</module_name>
 	<parameters>
-	  <camera_id type="string">00000002</camera_id>
+	  <camera_id type="string">21347353</camera_id>
 
 	  <presets>
 	    <PixelFormat type="string">Mono16</PixelFormat>

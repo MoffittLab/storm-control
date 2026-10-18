@@ -33,8 +33,8 @@
       Line0 on OPTOIN is confirmed on the rig. Check the other camera line
       numbers against the camera's Technical Reference before using them.
 
-      Before running, set each camera's 'camera_id' (serial number, as
-      shown in SpinView) and check the DAQ device name in NI MAX.
+      The camera serial numbers ('camera_id') are those of the test rig.
+      Check the DAQ device name in NI MAX if using a different card.
   -->
 
   <!-- The starting directory. HAL writes logs to <directory>\logs. -->
@@ -112,7 +112,7 @@
 	<module_name type="string">storm_control.hal4000.camera.pointgreyCameraControl</module_name>
 	<parameters>
 	  <!-- Camera serial number, as shown in SpinView. -->
-	  <camera_id type="string">00000001</camera_id>
+	  <camera_id type="string">20232538</camera_id>
 
 	  <presets>
 	    <PixelFormat type="string">Mono16</PixelFormat>
@@ -160,7 +160,7 @@
 	<module_name type="string">storm_control.hal4000.camera.pointgreyCameraControl</module_name>
 	<parameters>
 	  <!-- Camera serial number, as shown in SpinView. -->
-	  <camera_id type="string">00000002</camera_id>
+	  <camera_id type="string">21347353</camera_id>
 
 	  <presets>
 	    <PixelFormat type="string">Mono16</PixelFormat>
